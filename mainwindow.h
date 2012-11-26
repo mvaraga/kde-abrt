@@ -5,11 +5,13 @@
 #include <KListWidget>
 #include <KListWidgetSearchLine>
 #include <QListWidgetItem>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
 
 
 class MainWindow : public KXmlGuiWindow
 {
+  Q_OBJECT
 
   public:
     MainWindow(QWidget *parent=0);
@@ -19,7 +21,13 @@ class MainWindow : public KXmlGuiWindow
     KListWidget *listWidget;
     QListWidgetItem *item;
     KListWidgetSearchLine *searchLine;
-    QHBoxLayout *layout;
+    QVBoxLayout *layout;
+
+    QLabel *labelName;
+    QLabel *labelDescription;
+
+private slots:
+    void on_listWidget_executed(QListWidgetItem *item);
 
 };
 
