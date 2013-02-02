@@ -8,6 +8,7 @@ set(kde-abrt_SRCS
   mainwindow.cpp
   mymodel.cpp
   dataclass.cpp
+  dbus.cpp
 )
  
 kde4_add_executable(kde-abrt ${kde-abrt_SRCS})

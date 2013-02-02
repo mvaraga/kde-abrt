@@ -4,7 +4,6 @@
 #include "dbus.h"
 
 
-
 int Dbus::execute()
 {
     qDBusRegisterMetaType<QMap<QString,QString> >();
