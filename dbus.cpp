@@ -4,7 +4,7 @@
 #include "dbus.h"
 
 
-int Dbus::execute()
+QStringList* Dbus::execute()
 {
     qDBusRegisterMetaType<QMap<QString,QString> >();
 
@@ -25,7 +25,6 @@ int Dbus::execute()
     {
         QStringList list = reply.value();
 
-
         for (int i = 0; i < list.size(); ++i)
         {
             printf("%s\n", qPrintable(list.at(i)));
@@ -39,13 +38,14 @@ int Dbus::execute()
                 fprintf(stderr, "replyInfo failed: %s\n", qPrintable(replyInfo.error().message()));
             }
         }
+        
+        return new QStringList(list);
 
     }
     else {
         fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
-        return 1;
+        return NULL;
     }
     
-    return 0;
 }
 

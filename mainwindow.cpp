@@ -23,13 +23,28 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     listWidget = new KListWidget(); //widget
     QListWidgetItem *item; //widget
 
+   
+    QStringList* list;
+    list = Dbus::execute();
+      
+    if(list->empty()){
+      fprintf(stderr, "empty list");
+    }
+    QString string;
+    for(int i = 0; i < list->size(); i++){
+      item = new QListWidgetItem(list->at(i));
+      item->setData(Qt::UserRole, "description");
+      listWidget->addItem(item);
+    }
+
+   /* 
     //widget
     for(int i=0; i<10; i++) {
         item = new QListWidgetItem(QString::number(i) + "item");
         item->setData(Qt::UserRole, "description" + QString::number(i));
         //item->setData(Qt::UserRole+1,"");
         listWidget->addItem(item);
-    }
+    }*/
 
     layout->addWidget(listWidget); //widget
     layout->addWidget(labelName);
@@ -65,10 +80,20 @@ void MainWindow::on_listView_activated(QModelIndex index)
     labelDescription->setText(myModel->data(index, Qt::UserRole).toString());
 
     fprintf(stderr ,"%s\n", qPrintable(myModel->data(index, Qt::DisplayRole).toString())); //debug
-   
+
 }
 
-void MainWindow::on_buttonConnect_clicked(){
-    dbus = new Dbus();
-    dbus->execute();
+void MainWindow::on_buttonConnect_clicked() {
+    QStringList* list;
+    list = Dbus::execute();
+      
+    if(list->empty()){
+      fprintf(stderr, "empty list");
+    }
+    QString string;
+    for(int i = 0; i < list->size(); i++){
+      item = new QListWidgetItem(list->at(i));
+      item->setData(Qt::UserRole, "description");
+      listWidget->addItem(item);
+    }
 }

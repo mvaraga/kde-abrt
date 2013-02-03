@@ -11,7 +11,7 @@ Q_DECLARE_METATYPE(MyMap)
 class Dbus
 {
   public:
-    int execute();
+    static QStringList* execute();
 
   private:
 
