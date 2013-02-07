@@ -29,6 +29,9 @@ class MainWindow : public KXmlGuiWindow
 
     QLabel *labelName;
     QLabel *labelDescription;
+    QLabel *label1;
+    QLabel *label2;
+    QLabel *label3;
     
     QListView *listView;
     QAbstractListModel *myModel;
@@ -37,9 +40,9 @@ class MainWindow : public KXmlGuiWindow
 
 
 private slots:
-    void on_listWidget_executed(QListWidgetItem *item); //widget
     void on_listView_activated(QModelIndex);
     void on_buttonConnect_clicked();
+    void on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*);
 };
 
 #endif

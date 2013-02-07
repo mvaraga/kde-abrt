@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QtDBus>
+#include <QListWidget>
 #include "dbus.h"
 
 
-QStringList* Dbus::execute()
+QList<QListWidgetItem*>* Dbus::execute()
 {
     qDBusRegisterMetaType<QMap<QString,QString> >();
-
-  
 
     QString service("org.freedesktop.problems");
 
@@ -19,27 +18,38 @@ QStringList* Dbus::execute()
             bus);
 
     QDBusReply<QStringList> reply = interface->call("GetProblems");
-    QStringList stats("executable");
+    QStringList *stats = new QStringList();
+    *stats << "executable";
+    *stats << "time";
+    *stats << "count";
+    *stats << "pkg_name";
 
     if (reply.isValid())
     {
-        QStringList list = reply.value();
-
-        for (int i = 0; i < list.size(); ++i)
+        QStringList stringList = reply.value();
+	QList<QListWidgetItem*> *list = new QList<QListWidgetItem*>();
+	QListWidgetItem *item;
+        for (int i = 0; i < stringList.size(); ++i)
         {
-            printf("%s\n", qPrintable(list.at(i)));
+            //printf("%s\n", qPrintable(stringList.at(i)));
 
-            QDBusReply<QMap<QString,QString> > replyInfo = interface->call("GetInfo", list.at(i),stats);
+            QDBusReply<QMap<QString,QString> > replyInfo = interface->call("GetInfo", stringList.at(i),*stats);
 
             if(replyInfo.isValid()) {
-                printf("\t%s\n", qPrintable(replyInfo.value().value("executable")));
+		item = new QListWidgetItem(stringList.at(i));
+		item->setData(Qt::UserRole, replyInfo.value().value("executable"));
+		item->setData(Qt::UserRole+1, replyInfo.value().value("pkg_name"));
+		item->setData(Qt::UserRole+2, replyInfo.value().value("time"));
+		item->setData(Qt::UserRole+3, replyInfo.value().value("count"));
+		list->append(item);
+                //printf("\t%s\n", qPrintable(replyInfo.value().value("executable")));
             } else
             {
                 fprintf(stderr, "replyInfo failed: %s\n", qPrintable(replyInfo.error().message()));
             }
         }
         
-        return new QStringList(list);
+	return list;
 
     }
     else {

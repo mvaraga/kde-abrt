@@ -4,7 +4,6 @@
 #include "mainwindow.h"
 #include "dbus.h"
 
-
 MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
 {
     listView = new QListView(this);
@@ -19,23 +18,13 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     layout = new QVBoxLayout;
     labelName = new QLabel("label");
     labelDescription = new QLabel("label");
-
+    label1 = new QLabel();
+    label2 = new QLabel();
+    label3 = new QLabel();
+    
     listWidget = new KListWidget(); //widget
-    QListWidgetItem *item; //widget
 
-   
-    QStringList* list;
-    list = Dbus::execute();
-      
-    if(list->empty()){
-      fprintf(stderr, "empty list");
-    }
-    QString string;
-    for(int i = 0; i < list->size(); i++){
-      item = new QListWidgetItem(list->at(i));
-      item->setData(Qt::UserRole, "description");
-      listWidget->addItem(item);
-    }
+    on_buttonConnect_clicked();
 
    /* 
     //widget
@@ -49,6 +38,9 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     layout->addWidget(listWidget); //widget
     layout->addWidget(labelName);
     layout->addWidget(labelDescription);
+    layout->addWidget(label1);
+    layout->addWidget(label2);
+    layout->addWidget(label3);
     layout->addWidget(listView);
     layout->addWidget(buttonConnection);
 
@@ -57,22 +49,26 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     setCentralWidget(master);
 
     //widget
-    connect(listWidget, SIGNAL(executed(QListWidgetItem*)),
-            this, SLOT(on_listWidget_executed(QListWidgetItem*)));
+    connect(listWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+      this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
+    );
 
 // setupGUI();
 }
 
 //widget
-void MainWindow::on_listWidget_executed(QListWidgetItem *item) {
+void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem* prev) {
     QString text = item->text();
     QString desc = item->data(Qt::UserRole).toString();
+    labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
+    label1->setText(item->data(Qt::UserRole+1).toString()); //pkg_name
+    label2->setText(item->data(Qt::UserRole+2).toString()); //time
+    label3->setText(item->data(Qt::UserRole+3).toString()); //count
     labelName->setText(text);
-    labelDescription->setText(desc);
+    //labelDescription->setText();
 
     fprintf(stderr ,"%s\n", qPrintable(text)); //debug
 }
-
 
 void MainWindow::on_listView_activated(QModelIndex index)
 {
@@ -84,16 +80,15 @@ void MainWindow::on_listView_activated(QModelIndex index)
 }
 
 void MainWindow::on_buttonConnect_clicked() {
-    QStringList* list;
+    QList<QListWidgetItem*>* list;
     list = Dbus::execute();
       
     if(list->empty()){
       fprintf(stderr, "empty list");
     }
-    QString string;
-    for(int i = 0; i < list->size(); i++){
-      item = new QListWidgetItem(list->at(i));
-      item->setData(Qt::UserRole, "description");
+    
+    for(int i = 0; i < list->size(); i++){ 
+      item = list->at(i);
       listWidget->addItem(item);
     }
 }
