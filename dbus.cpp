@@ -5,19 +5,23 @@
 #include "dbus.h"
 
 
-QList<QListWidgetItem*>* Dbus::execute()
+QList<QListWidgetItem*>* Dbus::getProblems(bool allProblems)
 {
-    qDBusRegisterMetaType<QMap<QString,QString> >();
+    qDBusRegisterMetaType<QMap<QString,QString> >(); //allow QDBusReply<QMap<QString,QString> >
 
+    //create connection
     QString service("org.freedesktop.problems");
-
     QDBusConnection bus = QDBusConnection::systemBus();
     QDBusInterface *interface = new QDBusInterface(service,
             "/org/freedesktop/problems",
             "org.freedesktop.problems",
             bus);
 
-    QDBusReply<QStringList> reply = interface->call("GetProblems");
+    
+    //get reply from dbus
+    QDBusReply<QStringList> reply = interface->call(allProblems ? "GetAllProblems" : "GetProblems");
+    
+    //attributes for problems
     QStringList *stats = new QStringList();
     *stats << "executable";
     *stats << "time";

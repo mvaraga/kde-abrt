@@ -9,11 +9,14 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     listView = new QListView(this);
     myModel = new MyModel(this);
     listView->setModel(myModel);
-    buttonConnection = new KPushButton("connect",this);
+    buttonConnection = new KPushButton("get problems",this);
+    buttonGetAllProblems = new KPushButton("get all problems",this);
 
     connect(listView, SIGNAL(activated(const QModelIndex &)), this, SLOT(on_listView_activated(QModelIndex)));
     connect(buttonConnection, SIGNAL(clicked(bool)), this, SLOT(on_buttonConnect_clicked()));
+    connect(buttonGetAllProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetAllProblems_clicked()));
 
+    
     master = new QWidget;
     layout = new QVBoxLayout;
     labelName = new QLabel("label");
@@ -43,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     layout->addWidget(label3);
     layout->addWidget(listView);
     layout->addWidget(buttonConnection);
+    layout->addWidget(buttonGetAllProblems);
 
     master->setLayout(layout);
 
@@ -81,7 +85,7 @@ void MainWindow::on_listView_activated(QModelIndex index)
 
 void MainWindow::on_buttonConnect_clicked() {
     QList<QListWidgetItem*>* list;
-    list = Dbus::execute();
+    list = Dbus::getProblems(false);
       
     if(list->empty()){
       fprintf(stderr, "empty list");
@@ -92,3 +96,18 @@ void MainWindow::on_buttonConnect_clicked() {
       listWidget->addItem(item);
     }
 }
+
+void MainWindow::on_buttonGetAllProblems_clicked() {
+    QList<QListWidgetItem*>* list;
+    list = Dbus::getProblems(true);
+      
+    if(list->empty()){
+      fprintf(stderr, "empty list");
+    }
+    
+    for(int i = 0; i < list->size(); i++){ 
+      item = list->at(i);
+      listWidget->addItem(item);
+    }
+}
+
