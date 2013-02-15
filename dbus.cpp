@@ -63,3 +63,25 @@ QList<QListWidgetItem*>* Dbus::getProblems(bool allProblems)
     
 }
 
+void Dbus::deleteProblem(QStringList* problems)
+{
+  //create connection
+    QString service("org.freedesktop.problems");
+    QDBusConnection bus = QDBusConnection::systemBus();
+    QDBusInterface *interface = new QDBusInterface(service,
+            "/org/freedesktop/problems",
+            "org.freedesktop.problems",
+            bus);
+    
+    QDBusReply<void> reply = interface->call("DeleteProblem", *problems);
+    if(reply.isValid()) return;
+    else {
+      fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
+    }
+    
+
+  
+
+}
+
+

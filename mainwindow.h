@@ -27,6 +27,8 @@ class MainWindow : public KXmlGuiWindow
     QVBoxLayout *layout;
     KPushButton *buttonConnection;
     KPushButton *buttonGetAllProblems;
+    KPushButton *buttonDelete;
+    KPushButton *buttonReport;
 
     QLabel *labelName;
     QLabel *labelDescription;
@@ -44,6 +46,8 @@ private slots:
     void on_listView_activated(QModelIndex);
     void on_buttonConnect_clicked();
     void on_buttonGetAllProblems_clicked();
+    void on_buttonDelete_clicked();
+    void on_buttonReport_clicked();
     void on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*);
 };
 
