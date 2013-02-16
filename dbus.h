@@ -16,6 +16,7 @@ class Dbus
     static void deleteProblem(QStringList *problems);
     //static QList<QListWidgetItem*>* getAllProblems(int);
   private:
+    static QDBusInterface* createInterface();
 
 
 };

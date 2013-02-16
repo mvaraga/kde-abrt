@@ -71,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
 
 //widget
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem* prev) {
+    if(item==NULL) return;
+   // if(prev==NULL) return;
     QString text = item->text();
     //QString desc = item->data(Qt::UserRole).toString();
     labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
@@ -100,6 +102,7 @@ void MainWindow::on_buttonConnect_clicked() {
       fprintf(stderr, "empty list");
     }
     
+    //listWidget->clear();//remove duplicates
     for(int i = 0; i < list->size(); i++){ 
       item = list->at(i);
       listWidget->addItem(item);
@@ -114,6 +117,7 @@ void MainWindow::on_buttonGetAllProblems_clicked() {
       fprintf(stderr, "empty list");
     }
     
+    listWidget->clear();//remove duplicates
     for(int i = 0; i < list->size(); i++){ 
       item = list->at(i);
       listWidget->addItem(item);
@@ -142,6 +146,7 @@ void MainWindow::on_buttonDelete_clicked() {
    
 }
 
+//todo
 void MainWindow::on_buttonReport_clicked() {
    
 }

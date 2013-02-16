@@ -10,13 +10,7 @@ QList<QListWidgetItem*>* Dbus::getProblems(bool allProblems)
     qDBusRegisterMetaType<QMap<QString,QString> >(); //allow QDBusReply<QMap<QString,QString> >
 
     //create connection
-    QString service("org.freedesktop.problems");
-    QDBusConnection bus = QDBusConnection::systemBus();
-    QDBusInterface *interface = new QDBusInterface(service,
-            "/org/freedesktop/problems",
-            "org.freedesktop.problems",
-            bus);
-
+    QDBusInterface *interface = createInterface();
     
     //get reply from dbus
     QDBusReply<QStringList> reply = interface->call(allProblems ? "GetAllProblems" : "GetProblems");
@@ -66,22 +60,23 @@ QList<QListWidgetItem*>* Dbus::getProblems(bool allProblems)
 void Dbus::deleteProblem(QStringList* problems)
 {
   //create connection
-    QString service("org.freedesktop.problems");
-    QDBusConnection bus = QDBusConnection::systemBus();
-    QDBusInterface *interface = new QDBusInterface(service,
-            "/org/freedesktop/problems",
-            "org.freedesktop.problems",
-            bus);
+    QDBusInterface *interface = createInterface();
     
     QDBusReply<void> reply = interface->call("DeleteProblem", *problems);
     if(reply.isValid()) return;
     else {
       fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
     }
-    
+}
 
-  
-
+QDBusInterface* Dbus::createInterface(){
+    QString service("org.freedesktop.problems");
+    QDBusConnection bus = QDBusConnection::systemBus();
+    QDBusInterface *interface = new QDBusInterface(service,
+            "/org/freedesktop/problems",
+            "org.freedesktop.problems",
+            bus);
+    return interface;
 }
 
 
