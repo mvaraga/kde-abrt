@@ -29,6 +29,7 @@ class MainWindow : public KXmlGuiWindow
     KPushButton *buttonGetAllProblems;
     KPushButton *buttonDelete;
     KPushButton *buttonReport;
+    KListWidgetSearchLine *searchLine;
 
     QLabel *labelName;
     QLabel *labelDescription;

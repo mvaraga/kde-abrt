@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     listView = new QListView(this);
     myModel = new MyModel(this);
     listView->setModel(myModel);
+    listView->hide();
+    setMinimumSize(500,500);
+    
     buttonConnection = new KPushButton("get problems",this);
     buttonGetAllProblems = new KPushButton("get all problems",this);
     buttonDelete = new KPushButton("delete problem", this);
@@ -20,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     connect(buttonDelete, SIGNAL(clicked(bool)), this, SLOT(on_buttonDelete_clicked()));
     connect(buttonReport, SIGNAL(clicked(bool)), this, SLOT(on_buttonReport_clicked()));
 
-    
+
     master = new QWidget;
     layout = new QVBoxLayout;
     labelName = new QLabel("label");
@@ -31,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     
     listWidget = new KListWidget(); //widget
     listWidget->setSelectionMode(KListWidget::ExtendedSelection);
-    
+    searchLine = new KListWidgetSearchLine(this,listWidget);
 
     on_buttonConnect_clicked();
 
@@ -44,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
         listWidget->addItem(item);
     }*/
 
+    layout->addWidget(searchLine);
     layout->addWidget(listWidget); //widget
     layout->addWidget(labelName);
     layout->addWidget(labelDescription);
@@ -61,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
 
     setCentralWidget(master);
 
+    
     //widget
     connect(listWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
       this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
@@ -102,7 +107,7 @@ void MainWindow::on_buttonConnect_clicked() {
       fprintf(stderr, "empty list");
     }
     
-    //listWidget->clear();//remove duplicates
+    listWidget->clear();//remove duplicates
     for(int i = 0; i < list->size(); i++){ 
       item = list->at(i);
       listWidget->addItem(item);
