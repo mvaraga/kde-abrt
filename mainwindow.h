@@ -25,6 +25,11 @@ class MainWindow : public KXmlGuiWindow
     KListWidget *listWidget; //widget
     QListWidgetItem *item; //widget
     QVBoxLayout *layout;
+    QHBoxLayout *hLayout;
+    QVBoxLayout *vLeftLayout;
+    QVBoxLayout *vRightLayout;
+    QHBoxLayout *hRightLayout;
+    QWidget *widget;
     KPushButton *buttonConnection;
     KPushButton *buttonGetAllProblems;
     KPushButton *buttonDelete;

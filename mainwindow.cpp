@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     myModel = new MyModel(this);
     listView->setModel(myModel);
     listView->hide();
-    setMinimumSize(500,500);
+   // setMinimumSize(500,500);
     
     buttonConnection = new KPushButton("get problems",this);
     buttonGetAllProblems = new KPushButton("get all problems",this);
@@ -23,9 +23,13 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     connect(buttonDelete, SIGNAL(clicked(bool)), this, SLOT(on_buttonDelete_clicked()));
     connect(buttonReport, SIGNAL(clicked(bool)), this, SLOT(on_buttonReport_clicked()));
 
-
+    widget = new QWidget;
     master = new QWidget;
     layout = new QVBoxLayout;
+    hLayout = new QHBoxLayout;
+    vLeftLayout = new QVBoxLayout;
+    vRightLayout = new QVBoxLayout;
+    hRightLayout = new QHBoxLayout;
     labelName = new QLabel("label");
     labelDescription = new QLabel("label");
     label1 = new QLabel();
@@ -33,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     label3 = new QLabel();
     
     listWidget = new KListWidget(); //widget
+
     listWidget->setSelectionMode(KListWidget::ExtendedSelection);
     searchLine = new KListWidgetSearchLine(this,listWidget);
 
@@ -46,22 +51,31 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
         //item->setData(Qt::UserRole+1,"");
         listWidget->addItem(item);
     }*/
-
-    layout->addWidget(searchLine);
-    layout->addWidget(listWidget); //widget
-    layout->addWidget(labelName);
-    layout->addWidget(labelDescription);
-    layout->addWidget(label1);
-    layout->addWidget(label2);
-    layout->addWidget(label3);
-    layout->addWidget(buttonDelete);
-    layout->addWidget(buttonReport);
     
-    layout->addWidget(listView);
-    layout->addWidget(buttonConnection);
-    layout->addWidget(buttonGetAllProblems);
+    vLeftLayout->addWidget(searchLine);
+    vLeftLayout->addWidget(listWidget); //widget
+    vLeftLayout->addWidget(buttonConnection);
+    vLeftLayout->addWidget(buttonGetAllProblems);
+    widget->setLayout(vLeftLayout);
+    widget->setMinimumWidth(400);
+    widget->setMaximumWidth(400);
+    hLayout->addWidget(widget);
+    vRightLayout->addWidget(labelName);
+    vRightLayout->addWidget(labelDescription);
+    vRightLayout->addWidget(label1);
+    vRightLayout->addWidget(label2);
+    vRightLayout->addWidget(label3);
+   
+    hRightLayout->addWidget(buttonDelete);
+    hRightLayout->addWidget(buttonReport);
+    vRightLayout->addLayout(hRightLayout);
+    
+    hLayout->addLayout(vRightLayout);
+    
+    hLayout->addWidget(listView);
+  
 
-    master->setLayout(layout);
+    master->setLayout(hLayout);
 
     setCentralWidget(master);
 
