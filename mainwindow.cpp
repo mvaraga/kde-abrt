@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
 }
 
 //widget
-void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem* prev) {
+void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*) {
     if(item==NULL) return;
    // if(prev==NULL) return;
     QString text = item->text();
