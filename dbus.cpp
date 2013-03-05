@@ -3,9 +3,10 @@
 #include <QtDBus/QtDBus>
 #include <QListWidget>
 #include "dbus.h"
+#include "problemdata.h"
 
 
-QList<QListWidgetItem*>* Dbus::getProblems(bool allProblems)
+QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 {
     qDBusRegisterMetaType<QMap<QString,QString> >(); //allow QDBusReply<QMap<QString,QString> >
 
@@ -25,8 +26,9 @@ QList<QListWidgetItem*>* Dbus::getProblems(bool allProblems)
     if (reply.isValid())
     {
         QStringList stringList = reply.value();
-	QList<QListWidgetItem*> *list = new QList<QListWidgetItem*>();
-	QListWidgetItem *item;
+	QList<ProblemData*> *list = new QList<ProblemData*>();
+	ProblemData *item;
+	
         for (int i = 0; i < stringList.size(); ++i)
         {
             //printf("%s\n", qPrintable(stringList.at(i)));
@@ -34,20 +36,20 @@ QList<QListWidgetItem*>* Dbus::getProblems(bool allProblems)
             QDBusReply<QMap<QString,QString> > replyInfo = interface->call("GetInfo", stringList.at(i),*stats);
 
             if(replyInfo.isValid()) {
-		item = new QListWidgetItem(stringList.at(i));
-		item->setData(Qt::UserRole, replyInfo.value().value("executable"));
-		item->setData(Qt::UserRole+1, replyInfo.value().value("pkg_name"));
-		item->setData(Qt::UserRole+2, replyInfo.value().value("time"));
-		item->setData(Qt::UserRole+3, replyInfo.value().value("count"));
-		list->append(item);
+		        item = new ProblemData(stringList.at(i),
+					   replyInfo.value().value("executable"),
+					   replyInfo.value().value("pkg_name"),
+					   replyInfo.value().value("count"),
+					   replyInfo.value().value("time")
+					  );
+		        list->append(item);
                 //printf("\t%s\n", qPrintable(replyInfo.value().value("executable")));
             } else
             {
                 fprintf(stderr, "replyInfo failed: %s\n", qPrintable(replyInfo.error().message()));
             }
         }
-        
-	return list;
+        return list;
 
     }
     else {

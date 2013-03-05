@@ -6,13 +6,16 @@
 #include <QtDBus/QtDBus>
 
 
+class ProblemData;
+
+
 typedef QMap <QString, QString> MyMap;
 Q_DECLARE_METATYPE(MyMap)
 
 class Dbus
 {
   public:
-    static QList<QListWidgetItem*>* getProblems(bool allProblems=false);
+    static QList<ProblemData*>* getProblems(bool allProblems=false);
     static void deleteProblem(QStringList *problems);
     //static QList<QListWidgetItem*>* getAllProblems(int);
   private:

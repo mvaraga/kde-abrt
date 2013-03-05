@@ -114,32 +114,48 @@ void MainWindow::on_listView_activated(QModelIndex index)
 }
 
 void MainWindow::on_buttonConnect_clicked() {
-    QList<QListWidgetItem*>* list;
-    list = Dbus::getProblems(false);
+    QList<ProblemData*>* list = Dbus::getProblems(false);
       
     if(list->empty()){
       fprintf(stderr, "empty list");
     }
     
     listWidget->clear();//remove duplicates
+    
+    ProblemData *item;
+    QListWidgetItem *widgetItem;
     for(int i = 0; i < list->size(); i++){ 
       item = list->at(i);
-      listWidget->addItem(item);
+      widgetItem = new QListWidgetItem(item->getName());
+      widgetItem->setData(Qt::UserRole, item->getExecutable());      
+      widgetItem->setData(Qt::UserRole+1, item->getPkg_name());
+      widgetItem->setData(Qt::UserRole+2, item->getTime());
+      widgetItem->setData(Qt::UserRole+3, item->getCount());
+    
+      listWidget->addItem(widgetItem);
     }
 }
 
 void MainWindow::on_buttonGetAllProblems_clicked() {
-    QList<QListWidgetItem*>* list;
-    list = Dbus::getProblems(true);
+  QList<ProblemData*>* list = Dbus::getProblems(false);
       
     if(list->empty()){
       fprintf(stderr, "empty list");
     }
     
     listWidget->clear();//remove duplicates
+    
+    ProblemData *item;
+    QListWidgetItem *widgetItem;
     for(int i = 0; i < list->size(); i++){ 
       item = list->at(i);
-      listWidget->addItem(item);
+      widgetItem = new QListWidgetItem(item->getName());
+      widgetItem->setData(Qt::UserRole, item->getExecutable());      
+      widgetItem->setData(Qt::UserRole+1, item->getPkg_name());
+      widgetItem->setData(Qt::UserRole+2, item->getTime());
+      widgetItem->setData(Qt::UserRole+3, item->getCount());
+    
+      listWidget->addItem(widgetItem);
     }
 }
 

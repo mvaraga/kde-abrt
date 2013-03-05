@@ -3,7 +3,7 @@
 // mymodel.h
 
 #include <QAbstractListModel>
-#include "dataclass.h"
+#include "problemdata.h"
 
 class MyModel : public QAbstractListModel
 {
@@ -15,7 +15,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     
 private:
-  QList<DataClass> m_data;
+  QList<ProblemData> m_data;
   
 };
 

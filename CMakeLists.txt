@@ -7,7 +7,7 @@ set(kde-abrt_SRCS
   main.cpp
   mainwindow.cpp
   mymodel.cpp
-  dataclass.cpp
+  problemdata.cpp
   dbus.cpp
 )
  

@@ -8,10 +8,12 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <KPushButton>
+#include "problemdata.h"
 
 class QListView;
 class QAbstractListModel;
 class Dbus;
+
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -23,7 +25,7 @@ class MainWindow : public KXmlGuiWindow
   private:
     QWidget *master;
     KListWidget *listWidget; //widget
-    QListWidgetItem *item; //widget
+    //QListWidgetItem *item; //widget
     QVBoxLayout *layout;
     QHBoxLayout *hLayout;
     QVBoxLayout *vLeftLayout;
