@@ -14,41 +14,39 @@ class QListView;
 class QAbstractListModel;
 class Dbus;
 
-
 class MainWindow : public KXmlGuiWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    MainWindow(QWidget *parent=0);
+public:
+    MainWindow(QWidget* parent = 0);
 
-  private:
-    QWidget *master;
-    KListWidget *listWidget; //widget
+private:
+    QWidget* master;
+    KListWidget* listWidget; //widget
     //QListWidgetItem *item; //widget
-    QVBoxLayout *layout;
-    QHBoxLayout *hLayout;
-    QVBoxLayout *vLeftLayout;
-    QVBoxLayout *vRightLayout;
-    QHBoxLayout *hRightLayout;
-    QWidget *widget;
-    KPushButton *buttonConnection;
-    KPushButton *buttonGetAllProblems;
-    KPushButton *buttonDelete;
-    KPushButton *buttonReport;
-    KListWidgetSearchLine *searchLine;
+    QVBoxLayout* layout;
+    QHBoxLayout* hLayout;
+    QVBoxLayout* vLeftLayout;
+    QVBoxLayout* vRightLayout;
+    QHBoxLayout* hRightLayout;
+    QWidget* widget;
+    KPushButton* buttonConnection;
+    KPushButton* buttonGetAllProblems;
+    KPushButton* buttonDelete;
+    KPushButton* buttonReport;
+    KListWidgetSearchLine* searchLine;
 
-    QLabel *labelName;
-    QLabel *labelDescription;
-    QLabel *label1;
-    QLabel *label2;
-    QLabel *label3;
-    
-    QListView *listView;
-    QAbstractListModel *myModel;
-    
-    Dbus *dbus;
+    QLabel* labelName;
+    QLabel* labelDescription;
+    QLabel* label1;
+    QLabel* label2;
+    QLabel* label3;
 
+    QListView* listView;
+    QAbstractListModel* myModel;
+
+    Dbus* dbus;
 
 private slots:
     void on_listView_activated(QModelIndex);
@@ -60,4 +58,3 @@ private slots:
 };
 
 #endif
-    

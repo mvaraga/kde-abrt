@@ -14,16 +14,12 @@ Q_DECLARE_METATYPE(MyMap)
 
 class Dbus
 {
-  public:
-    static QList<ProblemData*>* getProblems(bool allProblems=false);
-    static void deleteProblem(QStringList *problems);
+public:
+    static QList<ProblemData*>* getProblems(bool allProblems = false);
+    static void deleteProblem(QStringList* problems);
     //static QList<QListWidgetItem*>* getAllProblems(int);
-  private:
+private:
     static QDBusInterface* createInterface();
-
-
 };
 
-
 #endif
-    

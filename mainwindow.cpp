@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     myModel = new MyModel(this);
     listView->setModel(myModel);
     listView->hide();
-    // setMinimumSize(500,500);
 
     buttonConnection = new KPushButton("get problems", this);
     buttonGetAllProblems = new KPushButton("get all problems", this);
@@ -36,7 +35,7 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     label2 = new QLabel();
     label3 = new QLabel();
 
-    listWidget = new KListWidget(); //widget
+    listWidget = new KListWidget();                           //widget
 
     listWidget->setSelectionMode(KListWidget::ExtendedSelection);
     searchLine = new KListWidgetSearchLine(this, listWidget);
@@ -44,16 +43,16 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     on_buttonConnect_clicked();
 
     /*
-    *    //widget
-    *    for(int i=0; i<10; i++) {
-    *        item = new QListWidgetItem(QString::number(i) + "item");
-    *        item->setData(Qt::UserRole, "description" + QString::number(i));
-    *        //item->setData(Qt::UserRole+1,"");
-    *        listWidget->addItem(item);
+     *    //widget
+     *    for(int i=0; i<10; i++) {
+     *        item = new QListWidgetItem(QString::number(i) + "item");
+     *        item->setData(Qt::UserRole, "description" + QString::number(i));
+     *        //item->setData(Qt::UserRole+1,"");
+     *        listWidget->addItem(item);
     }*/
 
     vLeftLayout->addWidget(searchLine);
-    vLeftLayout->addWidget(listWidget); //widget
+    vLeftLayout->addWidget(listWidget);                       //widget
     vLeftLayout->addWidget(buttonConnection);
     vLeftLayout->addWidget(buttonGetAllProblems);
     widget->setLayout(vLeftLayout);
@@ -82,7 +81,7 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
             this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
            );
 
-    // setupGUI();
+// setupGUI();
 }
 
 //widget
@@ -92,14 +91,15 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     // if(prev==NULL) return;
     QString text = item->text();
     //QString desc = item->data(Qt::UserRole).toString();
-    labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
+    //executable
+    labelDescription->setText(item->data(Qt::UserRole).toString());
     label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
     label2->setText(item->data(Qt::UserRole + 2).toString()); //time
     label3->setText(item->data(Qt::UserRole + 3).toString()); //count
     labelName->setText(text);
     //labelDescription->setText();
 
-    fprintf(stderr , "%s\n", qPrintable(text)); //debug
+    fprintf(stderr , "%s\n", qPrintable(text));               //debug
 }
 
 void MainWindow::on_listView_activated(QModelIndex index)
@@ -107,7 +107,8 @@ void MainWindow::on_listView_activated(QModelIndex index)
     labelName->setText(myModel->data(index, Qt::DisplayRole).toString());
     labelDescription->setText(myModel->data(index, Qt::UserRole).toString());
 
-    fprintf(stderr , "%s\n", qPrintable(myModel->data(index, Qt::DisplayRole).toString())); //debug
+    //debug
+    fprintf(stderr , "%s\n", qPrintable(myModel->data(index, Qt::DisplayRole).toString()));
 
 }
 
@@ -119,7 +120,7 @@ void MainWindow::on_buttonConnect_clicked()
         fprintf(stderr, "empty list");
     }
 
-    listWidget->clear();//remove duplicates
+    listWidget->clear();                                      //remove duplicates
 
     ProblemData* item;
     QListWidgetItem* widgetItem;
@@ -143,7 +144,7 @@ void MainWindow::on_buttonGetAllProblems_clicked()
         fprintf(stderr, "empty list");
     }
 
-    listWidget->clear();//remove duplicates
+    listWidget->clear();                                      //remove duplicates
 
     ProblemData* item;
     QListWidgetItem* widgetItem;

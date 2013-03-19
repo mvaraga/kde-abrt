@@ -8,77 +8,72 @@
 
 QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 {
-    qDBusRegisterMetaType<QMap<QString,QString> >(); //allow QDBusReply<QMap<QString,QString> >
+    qDBusRegisterMetaType<QMap<QString, QString> >(); //allow QDBusReply<QMap<QString,QString> >
 
     //create connection
-    QDBusInterface *interface = createInterface();
-    
+    QDBusInterface* interface = createInterface();
+
     //get reply from dbus
     QDBusReply<QStringList> reply = interface->call(allProblems ? "GetAllProblems" : "GetProblems");
-    
+
     //attributes for problems
-    QStringList *stats = new QStringList();
+    QStringList* stats = new QStringList();
     *stats << "executable";
     *stats << "time";
     *stats << "count";
     *stats << "pkg_name";
 
-    if (reply.isValid())
-    {
+    if (reply.isValid()) {
         QStringList stringList = reply.value();
-	QList<ProblemData*> *list = new QList<ProblemData*>();
-	ProblemData *item;
-	
-        for (int i = 0; i < stringList.size(); ++i)
-        {
+        QList<ProblemData*> *list = new QList<ProblemData*>();
+        ProblemData* item;
+
+        for (int i = 0; i < stringList.size(); ++i) {
             //printf("%s\n", qPrintable(stringList.at(i)));
 
-            QDBusReply<QMap<QString,QString> > replyInfo = interface->call("GetInfo", stringList.at(i),*stats);
+            QDBusReply<QMap<QString, QString> > replyInfo = interface->call("GetInfo", stringList.at(i), *stats);
 
-            if(replyInfo.isValid()) {
-		        item = new ProblemData(stringList.at(i),
-					   replyInfo.value().value("executable"),
-					   replyInfo.value().value("pkg_name"),
-					   replyInfo.value().value("count"),
-					   replyInfo.value().value("time")
-					  );
-		        list->append(item);
+            if (replyInfo.isValid()) {
+                item = new ProblemData(stringList.at(i),
+                                       replyInfo.value().value("executable"),
+                                       replyInfo.value().value("pkg_name"),
+                                       replyInfo.value().value("count"),
+                                       replyInfo.value().value("time")
+                                      );
+                list->append(item);
                 //printf("\t%s\n", qPrintable(replyInfo.value().value("executable")));
-            } else
-            {
+            } else {
                 fprintf(stderr, "replyInfo failed: %s\n", qPrintable(replyInfo.error().message()));
             }
         }
         return list;
 
-    }
-    else {
+    } else {
         fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
         return NULL;
     }
-    
+
 }
 
 void Dbus::deleteProblem(QStringList* problems)
 {
-  //create connection
-    QDBusInterface *interface = createInterface();
-    
+    //create connection
+    QDBusInterface* interface = createInterface();
+
     QDBusReply<void> reply = interface->call("DeleteProblem", *problems);
-    if(reply.isValid()) return;
+    if (reply.isValid()) return;
     else {
-      fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
+        fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
     }
 }
 
-QDBusInterface* Dbus::createInterface(){
+QDBusInterface* Dbus::createInterface()
+{
     QString service("org.freedesktop.problems");
     QDBusConnection bus = QDBusConnection::systemBus();
-    QDBusInterface *interface = new QDBusInterface(service,
+    QDBusInterface* interface = new QDBusInterface(service,
             "/org/freedesktop/problems",
             "org.freedesktop.problems",
             bus);
     return interface;
 }
-
-
