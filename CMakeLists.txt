@@ -8,7 +8,6 @@ include_directories(${KDE4_INCLUDES})
 set(kde-abrt_SRCS
   main.cpp
   mainwindow.cpp
-  mymodel.cpp
   problemdata.cpp
   dbus.cpp
 )

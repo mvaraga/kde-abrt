@@ -1,22 +1,15 @@
 #include <QListView>
 #include <stdio.h>
-#include "mymodel.h"
 #include "mainwindow.h"
 #include "dbus.h"
 
 MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 {
-    listView = new QListView(this);
-    myModel = new MyModel(this);
-    listView->setModel(myModel);
-    listView->hide();
-
     buttonConnection = new KPushButton("get problems", this);
     buttonGetAllProblems = new KPushButton("get all problems", this);
     buttonDelete = new KPushButton("delete problem", this);
     buttonReport = new KPushButton("report problem", this);
 
-    connect(listView, SIGNAL(activated(const QModelIndex&)), this, SLOT(on_listView_activated(QModelIndex)));
     connect(buttonConnection, SIGNAL(clicked(bool)), this, SLOT(on_buttonConnect_clicked()));
     connect(buttonGetAllProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetAllProblems_clicked()));
     connect(buttonDelete, SIGNAL(clicked(bool)), this, SLOT(on_buttonDelete_clicked()));
@@ -42,15 +35,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 
     on_buttonConnect_clicked();
 
-    /*
-     *    //widget
-     *    for(int i=0; i<10; i++) {
-     *        item = new QListWidgetItem(QString::number(i) + "item");
-     *        item->setData(Qt::UserRole, "description" + QString::number(i));
-     *        //item->setData(Qt::UserRole+1,"");
-     *        listWidget->addItem(item);
-    }*/
-
     vLeftLayout->addWidget(searchLine);
     vLeftLayout->addWidget(listWidget);                       //widget
     vLeftLayout->addWidget(buttonConnection);
@@ -70,7 +54,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     vRightLayout->addLayout(hRightLayout);
 
     hLayout->addLayout(vRightLayout);
-    hLayout->addWidget(listView);
 
     master->setLayout(hLayout);
 
@@ -88,7 +71,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*)
 {
     if (item == NULL) return;
-    // if(prev==NULL) return;
     QString text = item->text();
     //QString desc = item->data(Qt::UserRole).toString();
     //executable
@@ -100,16 +82,6 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     //labelDescription->setText();
 
     fprintf(stderr , "%s\n", qPrintable(text));               //debug
-}
-
-void MainWindow::on_listView_activated(QModelIndex index)
-{
-    labelName->setText(myModel->data(index, Qt::DisplayRole).toString());
-    labelDescription->setText(myModel->data(index, Qt::UserRole).toString());
-
-    //debug
-    fprintf(stderr , "%s\n", qPrintable(myModel->data(index, Qt::DisplayRole).toString()));
-
 }
 
 void MainWindow::on_buttonConnect_clicked()

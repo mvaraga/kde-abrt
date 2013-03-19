@@ -11,7 +11,6 @@
 #include "problemdata.h"
 
 class QListView;
-class QAbstractListModel;
 class Dbus;
 
 class MainWindow : public KXmlGuiWindow
@@ -24,7 +23,6 @@ public:
 private:
     QWidget* master;
     KListWidget* listWidget; //widget
-    //QListWidgetItem *item; //widget
     QVBoxLayout* layout;
     QHBoxLayout* hLayout;
     QVBoxLayout* vLeftLayout;
@@ -43,13 +41,9 @@ private:
     QLabel* label2;
     QLabel* label3;
 
-    QListView* listView;
-    QAbstractListModel* myModel;
-
     Dbus* dbus;
 
 private slots:
-    void on_listView_activated(QModelIndex);
     void on_buttonConnect_clicked();
     void on_buttonGetAllProblems_clicked();
     void on_buttonDelete_clicked();
