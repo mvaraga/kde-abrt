@@ -4,20 +4,20 @@
 #include "mainwindow.h"
 #include "dbus.h"
 
-MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
+MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 {
     listView = new QListView(this);
     myModel = new MyModel(this);
     listView->setModel(myModel);
     listView->hide();
-   // setMinimumSize(500,500);
-    
-    buttonConnection = new KPushButton("get problems",this);
-    buttonGetAllProblems = new KPushButton("get all problems",this);
+    // setMinimumSize(500,500);
+
+    buttonConnection = new KPushButton("get problems", this);
+    buttonGetAllProblems = new KPushButton("get all problems", this);
     buttonDelete = new KPushButton("delete problem", this);
     buttonReport = new KPushButton("report problem", this);
 
-    connect(listView, SIGNAL(activated(const QModelIndex &)), this, SLOT(on_listView_activated(QModelIndex)));
+    connect(listView, SIGNAL(activated(const QModelIndex&)), this, SLOT(on_listView_activated(QModelIndex)));
     connect(buttonConnection, SIGNAL(clicked(bool)), this, SLOT(on_buttonConnect_clicked()));
     connect(buttonGetAllProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetAllProblems_clicked()));
     connect(buttonDelete, SIGNAL(clicked(bool)), this, SLOT(on_buttonDelete_clicked()));
@@ -35,23 +35,23 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     label1 = new QLabel();
     label2 = new QLabel();
     label3 = new QLabel();
-    
+
     listWidget = new KListWidget(); //widget
 
     listWidget->setSelectionMode(KListWidget::ExtendedSelection);
-    searchLine = new KListWidgetSearchLine(this,listWidget);
+    searchLine = new KListWidgetSearchLine(this, listWidget);
 
     on_buttonConnect_clicked();
 
-   /* 
-    //widget
-    for(int i=0; i<10; i++) {
-        item = new QListWidgetItem(QString::number(i) + "item");
-        item->setData(Qt::UserRole, "description" + QString::number(i));
-        //item->setData(Qt::UserRole+1,"");
-        listWidget->addItem(item);
+    /*
+    *    //widget
+    *    for(int i=0; i<10; i++) {
+    *        item = new QListWidgetItem(QString::number(i) + "item");
+    *        item->setData(Qt::UserRole, "description" + QString::number(i));
+    *        //item->setData(Qt::UserRole+1,"");
+    *        listWidget->addItem(item);
     }*/
-    
+
     vLeftLayout->addWidget(searchLine);
     vLeftLayout->addWidget(listWidget); //widget
     vLeftLayout->addWidget(buttonConnection);
@@ -65,43 +65,41 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent)
     vRightLayout->addWidget(label1);
     vRightLayout->addWidget(label2);
     vRightLayout->addWidget(label3);
-   
+
     hRightLayout->addWidget(buttonDelete);
     hRightLayout->addWidget(buttonReport);
     vRightLayout->addLayout(hRightLayout);
-    
+
     hLayout->addLayout(vRightLayout);
-    
     hLayout->addWidget(listView);
-  
 
     master->setLayout(hLayout);
 
     setCentralWidget(master);
 
-    
     //widget
-    connect(listWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-      this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
-    );
+    connect(listWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+            this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
+           );
 
-// setupGUI();
+    // setupGUI();
 }
 
 //widget
-void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*) {
-    if(item==NULL) return;
-   // if(prev==NULL) return;
+void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*)
+{
+    if (item == NULL) return;
+    // if(prev==NULL) return;
     QString text = item->text();
     //QString desc = item->data(Qt::UserRole).toString();
     labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
-    label1->setText(item->data(Qt::UserRole+1).toString()); //pkg_name
-    label2->setText(item->data(Qt::UserRole+2).toString()); //time
-    label3->setText(item->data(Qt::UserRole+3).toString()); //count
+    label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
+    label2->setText(item->data(Qt::UserRole + 2).toString()); //time
+    label3->setText(item->data(Qt::UserRole + 3).toString()); //count
     labelName->setText(text);
     //labelDescription->setText();
 
-    fprintf(stderr ,"%s\n", qPrintable(text)); //debug
+    fprintf(stderr , "%s\n", qPrintable(text)); //debug
 }
 
 void MainWindow::on_listView_activated(QModelIndex index)
@@ -109,79 +107,98 @@ void MainWindow::on_listView_activated(QModelIndex index)
     labelName->setText(myModel->data(index, Qt::DisplayRole).toString());
     labelDescription->setText(myModel->data(index, Qt::UserRole).toString());
 
-    fprintf(stderr ,"%s\n", qPrintable(myModel->data(index, Qt::DisplayRole).toString())); //debug
+    fprintf(stderr , "%s\n", qPrintable(myModel->data(index, Qt::DisplayRole).toString())); //debug
 
 }
 
-void MainWindow::on_buttonConnect_clicked() {
+void MainWindow::on_buttonConnect_clicked()
+{
     QList<ProblemData*>* list = Dbus::getProblems(false);
-      
-    if(list->empty()){
-      fprintf(stderr, "empty list");
+
+    if (list->empty()) {
+        fprintf(stderr, "empty list");
     }
-    
+
     listWidget->clear();//remove duplicates
-    
-    ProblemData *item;
-    QListWidgetItem *widgetItem;
-    for(int i = 0; i < list->size(); i++){ 
-      item = list->at(i);
-      widgetItem = new QListWidgetItem(item->getName());
-      widgetItem->setData(Qt::UserRole, item->getExecutable());      
-      widgetItem->setData(Qt::UserRole+1, item->getPkg_name());
-      widgetItem->setData(Qt::UserRole+2, item->getTime());
-      widgetItem->setData(Qt::UserRole+3, item->getCount());
-    
-      listWidget->addItem(widgetItem);
+
+    ProblemData* item;
+    QListWidgetItem* widgetItem;
+    for (int i = 0; i < list->size(); i++) {
+        item = list->at(i);
+        widgetItem = new QListWidgetItem(item->getName());
+        widgetItem->setData(Qt::UserRole, item->getExecutable());
+        widgetItem->setData(Qt::UserRole + 1, item->getPkg_name());
+        widgetItem->setData(Qt::UserRole + 2, item->getTime());
+        widgetItem->setData(Qt::UserRole + 3, item->getCount());
+
+        listWidget->addItem(widgetItem);
     }
 }
 
-void MainWindow::on_buttonGetAllProblems_clicked() {
-  QList<ProblemData*>* list = Dbus::getProblems(false);
-      
-    if(list->empty()){
-      fprintf(stderr, "empty list");
+void MainWindow::on_buttonGetAllProblems_clicked()
+{
+    QList<ProblemData*>* list = Dbus::getProblems(false);
+
+    if (list->empty()) {
+        fprintf(stderr, "empty list");
     }
-    
+
     listWidget->clear();//remove duplicates
-    
-    ProblemData *item;
-    QListWidgetItem *widgetItem;
-    for(int i = 0; i < list->size(); i++){ 
-      item = list->at(i);
-      widgetItem = new QListWidgetItem(item->getName());
-      widgetItem->setData(Qt::UserRole, item->getExecutable());      
-      widgetItem->setData(Qt::UserRole+1, item->getPkg_name());
-      widgetItem->setData(Qt::UserRole+2, item->getTime());
-      widgetItem->setData(Qt::UserRole+3, item->getCount());
-    
-      listWidget->addItem(widgetItem);
+
+    ProblemData* item;
+    QListWidgetItem* widgetItem;
+    for (int i = 0; i < list->size(); i++) {
+        item = list->at(i);
+        widgetItem = new QListWidgetItem(item->getName());
+        widgetItem->setData(Qt::UserRole, item->getExecutable());
+        widgetItem->setData(Qt::UserRole + 1, item->getPkg_name());
+        widgetItem->setData(Qt::UserRole + 2, item->getTime());
+        widgetItem->setData(Qt::UserRole + 3, item->getCount());
+
+        listWidget->addItem(widgetItem);
     }
 }
 
-void MainWindow::on_buttonDelete_clicked() {
-   QList<QListWidgetItem*> list = listWidget->selectedItems();
-   QListWidgetItem *item;
-   QStringList *stringList = new QStringList();
-   
-   if(list.isEmpty()) {
-     fprintf(stderr, "warning: no item(s) selected\n");
-     return;
-   }
-   if(list.size()==1) {
-     item = list.at(0);
-     Dbus::deleteProblem(new QStringList(item->text()));
-   } else {
-     foreach(item, list){
-       stringList->append(item->text());
-       Dbus::deleteProblem(stringList);
-     }
-     return;
-   }
-   
+void MainWindow::on_buttonDelete_clicked()
+{
+    QList<QListWidgetItem*> list = listWidget->selectedItems();
+    QListWidgetItem* item;
+    QStringList* stringList = new QStringList();
+
+    if (list.isEmpty()) {
+        fprintf(stderr, "warning: no item(s) selected\n");
+        return;
+    }
+    if (list.size() == 1) {
+        item = list.at(0);
+        Dbus::deleteProblem(new QStringList(item->text()));
+    } else {
+        foreach (item, list) {
+            stringList->append(item->text());
+            Dbus::deleteProblem(stringList);
+        }
+        return;
+    }
 }
 
-//todo
-void MainWindow::on_buttonReport_clicked() {
-   
+void MainWindow::on_buttonReport_clicked()
+{
+    QList<QListWidgetItem*> list = listWidget->selectedItems();
+    QListWidgetItem* item;
+    QStringList stringList;
+
+    if (list.isEmpty()) {
+        fprintf(stderr, "warning: no item(s) selected\n");
+        return;
+    }
+
+    if (list.size() == 1) {
+        printf(LIBEXEC_DIR"/abrt-handle-event");
+        stringList.append("-e");
+        stringList.append("report-gui");
+        stringList.append("--");
+        stringList.append(list.first()->text());
+
+        QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
+    }
 }
