@@ -4,24 +4,14 @@ ProblemData::ProblemData()
 {
 }
 
-ProblemData::ProblemData(QString name, QString desc)
-{
-    this->name = name;
-    this->desc = desc;
-}
-
-ProblemData::ProblemData(QString name, QString executable, QString pkg_name, QString count, QString time)
-{
-    this->name = name;
-    this->executable = executable;
-    this->pkg_name = pkg_name;
-    this->count = count;
-    this->time = time;
-}
-
 QString ProblemData::getDesc()
 {
     return desc;
+}
+
+void ProblemData::setDesc(QString desc)
+{
+    this->desc = desc;
 }
 
 QString ProblemData::getName()
@@ -29,9 +19,20 @@ QString ProblemData::getName()
     return name;
 }
 
+void ProblemData::setName(QString name)
+{
+    this->name = name;
+
+}
+
 QString ProblemData::getCount()
 {
     return count;
+}
+
+void ProblemData::setCount(QString count)
+{
+    this->count = count;
 }
 
 QString ProblemData::getExecutable()
@@ -39,9 +40,19 @@ QString ProblemData::getExecutable()
     return executable;
 }
 
+void ProblemData::setExecutable(QString executable)
+{
+    this->executable = executable;
+}
+
 QString ProblemData::getPkg_name()
 {
     return pkg_name;
+}
+
+void ProblemData::setPkg_name(QString pkg_name)
+{
+    this->pkg_name = pkg_name;
 }
 
 QString ProblemData::getTime()
@@ -49,3 +60,17 @@ QString ProblemData::getTime()
     return time;
 }
 
+void ProblemData::setTime(QString time)
+{
+    this->time = time;
+}
+
+QString ProblemData::getID()
+{
+    return id;
+}
+
+void ProblemData::setID(QString)
+{
+    this->id = id;
+}

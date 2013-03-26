@@ -5,12 +5,10 @@
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QtDBus>
 
-
 class ProblemData;
 
-
-typedef QMap <QString, QString> MyMap;
-Q_DECLARE_METATYPE(MyMap)
+typedef QMap <QString, QString> MetaMap;
+Q_DECLARE_METATYPE(MetaMap)
 
 class Dbus
 {

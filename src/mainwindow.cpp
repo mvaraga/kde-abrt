@@ -104,7 +104,7 @@ void MainWindow::on_buttonDelete_clicked()
     }
     if (list.size() == 1) {
         item = list.at(0);
-        Dbus::deleteProblem(new QStringList(item->text()));
+        Dbus::deleteProblem(new QStringList(item->data(Qt::UserRole + 4).toString()));
     } else {
         foreach (item, list) {
             stringList->append(item->text());
@@ -128,7 +128,7 @@ void MainWindow::on_buttonReport_clicked()
         stringList.append("-e");
         stringList.append("report-gui");
         stringList.append("--");
-        stringList.append(list.first()->text());
+        stringList.append(list.first()->data(Qt::UserRole + 4).toString());
 
         QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
     }
@@ -153,11 +153,12 @@ void MainWindow::getAllProblems(bool allProblems)
     QListWidgetItem* widgetItem;
     for (int i = 0; i < list->size(); i++) {
         item = list->at(i);
-        widgetItem = new QListWidgetItem(item->getName());
+        widgetItem = new QListWidgetItem(item->getPkg_name());
         widgetItem->setData(Qt::UserRole, item->getExecutable());
         widgetItem->setData(Qt::UserRole + 1, item->getPkg_name());
         widgetItem->setData(Qt::UserRole + 2, item->getTime());
         widgetItem->setData(Qt::UserRole + 3, item->getCount());
+	widgetItem->setData(Qt::UserRole + 4, item->getID());
 
         listWidget->addItem(widgetItem);
         delete(item);

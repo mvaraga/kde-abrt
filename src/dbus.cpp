@@ -39,12 +39,12 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
             QDBusReply<QMap<QString, QString> > replyInfo = interface->call("GetInfo", stringList.at(i), *stats);
 
             if (replyInfo.isValid()) {
-                item = new ProblemData(stringList.at(i),
-                                       replyInfo.value().value(statExecutable),
-                                       replyInfo.value().value(statPkg_name),
-                                       replyInfo.value().value(statCount),
-                                       replyInfo.value().value(statTime)
-                                      );
+                item = new ProblemData();
+                item->setID(stringList.at(i));
+                item->setExecutable(replyInfo.value().value(statExecutable));
+                item->setPkg_name(replyInfo.value().value(statPkg_name));
+                item->setCount(replyInfo.value().value(statCount));
+                item->setTime(replyInfo.value().value(statTime));
                 list->append(item);
                 //printf("\t%s\n", qPrintable(replyInfo.value().value("executable")));
             } else {
