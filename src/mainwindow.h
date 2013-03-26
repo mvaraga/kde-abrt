@@ -29,7 +29,7 @@ private:
     QVBoxLayout* vRightLayout;
     QHBoxLayout* hRightLayout;
     QWidget* widget;
-    KPushButton* buttonConnection;
+    KPushButton* buttonGetProblems;
     KPushButton* buttonGetAllProblems;
     KPushButton* buttonDelete;
     KPushButton* buttonReport;
@@ -44,11 +44,13 @@ private:
     Dbus* dbus;
 
 private slots:
-    void on_buttonConnect_clicked();
+    void on_buttonGetProblems_clicked();
     void on_buttonGetAllProblems_clicked();
     void on_buttonDelete_clicked();
     void on_buttonReport_clicked();
     void on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*);
+    void getProblems();
+    void getAllProblems(bool allProblems = true);
 };
 
 #endif

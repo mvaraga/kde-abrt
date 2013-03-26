@@ -16,14 +16,15 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
     //get reply from dbus
     QDBusReply<QStringList> reply = interface->call(allProblems ? "GetAllProblems" : "GetProblems");
 
-    //attributes for problems
-    QStringList* stats = new QStringList();
-    *stats << "executable";
-    *stats << "time";
-    *stats << "count";
-    *stats << "pkg_name";
-
     if (reply.isValid()) {
+
+        //attributes for problems
+        QStringList* stats = new QStringList();
+        *stats << "executable";
+        *stats << "time";
+        *stats << "count";
+        *stats << "pkg_name";
+
         QStringList stringList = reply.value();
         QList<ProblemData*> *list = new QList<ProblemData*>();
         ProblemData* item;
@@ -46,6 +47,7 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
                 fprintf(stderr, "replyInfo failed: %s\n", qPrintable(replyInfo.error().message()));
             }
         }
+        delete(stats);
         return list;
 
     } else {
