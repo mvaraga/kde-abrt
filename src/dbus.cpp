@@ -20,10 +20,14 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 
         //attributes for problems
         QStringList* stats = new QStringList();
-        *stats << "executable";
-        *stats << "time";
-        *stats << "count";
-        *stats << "pkg_name";
+        const QString statExecutable("executable");
+        const QString statTime("time");
+        const QString statCount("count");
+        const QString statPkg_name("pkg_name");
+        stats->append(statExecutable);
+        stats->append(statTime);
+        stats->append(statPkg_name);
+        stats->append(statCount);
 
         QStringList stringList = reply.value();
         QList<ProblemData*> *list = new QList<ProblemData*>();
@@ -36,10 +40,10 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 
             if (replyInfo.isValid()) {
                 item = new ProblemData(stringList.at(i),
-                                       replyInfo.value().value("executable"),
-                                       replyInfo.value().value("pkg_name"),
-                                       replyInfo.value().value("count"),
-                                       replyInfo.value().value("time")
+                                       replyInfo.value().value(statExecutable),
+                                       replyInfo.value().value(statPkg_name),
+                                       replyInfo.value().value(statCount),
+                                       replyInfo.value().value(statTime)
                                       );
                 list->append(item);
                 //printf("\t%s\n", qPrintable(replyInfo.value().value("executable")));
