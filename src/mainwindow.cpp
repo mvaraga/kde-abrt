@@ -5,6 +5,8 @@
 
 MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 {
+    dbus = new Dbus();
+
     buttonGetProblems = new KPushButton("get problems", this);
     buttonGetAllProblems = new KPushButton("get all problems", this);
     buttonDelete = new KPushButton("delete problem", this);
@@ -104,11 +106,11 @@ void MainWindow::on_buttonDelete_clicked()
     }
     if (list.size() == 1) {
         item = list.at(0);
-        Dbus::deleteProblem(new QStringList(item->data(Qt::UserRole + 4).toString()));
+        dbus->deleteProblem(new QStringList(item->data(Qt::UserRole + 4).toString()));
     } else {
         foreach (item, list) {
             stringList->append(item->text());
-            Dbus::deleteProblem(stringList);
+            dbus->deleteProblem(stringList);
         }
         return;
     }
@@ -141,7 +143,7 @@ void MainWindow::getProblems()
 
 void MainWindow::getAllProblems(bool allProblems)
 {
-    QList<ProblemData*>* list = Dbus::getProblems(allProblems);
+    QList<ProblemData*>* list = dbus->getProblems(allProblems);
 
     if (list->empty()) {
         fprintf(stderr, "empty list");
@@ -158,7 +160,7 @@ void MainWindow::getAllProblems(bool allProblems)
         widgetItem->setData(Qt::UserRole + 1, item->getPkg_name());
         widgetItem->setData(Qt::UserRole + 2, item->getTime());
         widgetItem->setData(Qt::UserRole + 3, item->getCount());
-	widgetItem->setData(Qt::UserRole + 4, item->getID());
+        widgetItem->setData(Qt::UserRole + 4, item->getID());
 
         listWidget->addItem(widgetItem);
         delete(item);

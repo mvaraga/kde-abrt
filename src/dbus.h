@@ -13,11 +13,18 @@ Q_DECLARE_METATYPE(MetaMap)
 class Dbus
 {
 public:
-    static QList<ProblemData*>* getProblems(bool allProblems = false);
-    static void deleteProblem(QStringList* problems);
-    //static QList<QListWidgetItem*>* getAllProblems(int);
+    Dbus();
+    QList<ProblemData*>* getProblems(bool allProblems = false);
+    void deleteProblem(QStringList* problems);
+
 private:
-    static QDBusInterface* createInterface();
+    QDBusInterface* createInterface();
+
+    QString service;
+    QString path;
+    QString interface;
+    QDBusConnection* connection;
+    QDBusInterface* dInterface;
 };
 
 #endif
