@@ -40,6 +40,7 @@ private:
     QLabel* label1;
     QLabel* label2;
     QLabel* label3;
+    QLabel* label4;
 
     Dbus* dbus;
 

@@ -70,7 +70,7 @@ QString ProblemData::getID()
     return id;
 }
 
-void ProblemData::setID(QString)
+void ProblemData::setID(QString id)
 {
     this->id = id;
 }

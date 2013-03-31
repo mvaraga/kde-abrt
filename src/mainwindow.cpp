@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     label1 = new QLabel();
     label2 = new QLabel();
     label3 = new QLabel();
+    label4 = new QLabel();
 
     listWidget = new KListWidget();
 
@@ -50,6 +51,7 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     vRightLayout->addWidget(label1);
     vRightLayout->addWidget(label2);
     vRightLayout->addWidget(label3);
+    vRightLayout->addWidget(label4);
 
     hRightLayout->addWidget(buttonDelete);
     hRightLayout->addWidget(buttonReport);
@@ -78,6 +80,7 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
     label2->setText(item->data(Qt::UserRole + 2).toString()); //time
     label3->setText(item->data(Qt::UserRole + 3).toString()); //count
+    label4->setText(item->data(Qt::UserRole + 4).toString()); //id
     labelName->setText(text);
     //labelDescription->setText();
 
