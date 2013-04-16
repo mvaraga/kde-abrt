@@ -5,6 +5,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 {
+    allProblems = false;
     dbus = new Dbus();
 
     buttonGetProblems = new KPushButton("get problems", this);
@@ -115,8 +116,8 @@ void MainWindow::on_buttonDelete_clicked()
             stringList->append(item->text());
             dbus->deleteProblem(stringList);
         }
-        return;
     }
+    getAllProblems(allProblems);
 }
 
 void MainWindow::on_buttonReport_clicked()

@@ -44,6 +44,8 @@ private:
 
     Dbus* dbus;
 
+    bool allProblems;
+
 private slots:
     void on_buttonGetProblems_clicked();
     void on_buttonGetAllProblems_clicked();
