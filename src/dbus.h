@@ -10,6 +10,11 @@ class ProblemData;
 typedef QMap <QString, QString> MetaMap;
 Q_DECLARE_METATYPE(MetaMap)
 
+
+/**
+ * This class connects to abrtd via dbus. It can get problems for current user
+ * or for all users on system and delete problems.
+ */
 class Dbus
 {
 public:

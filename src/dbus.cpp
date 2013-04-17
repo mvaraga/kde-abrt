@@ -5,7 +5,9 @@
 #include "dbus.h"
 #include "problemdata.h"
 
-
+/**
+ * This constructor create connection to dbus.
+ */
 Dbus::Dbus()
 {
     qDBusRegisterMetaType<QMap<QString, QString> >(); //allow QDBusReply<QMap<QString,QString> >
@@ -21,6 +23,14 @@ Dbus::Dbus()
                                     *connection);
 }
 
+/**
+ * This method gets problems from abrtd.
+ * When @p allProblems is @c true, gets problems from all users.
+ *
+ * @param allProblems show problems from all users?
+ * 
+ * @return List of problems
+ */
 QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 {
     //get reply from dbus
@@ -71,6 +81,12 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 
 }
 
+/**
+ * This method deletes problems.
+ * 
+ * @param problems problems to delete
+ * 
+ */
 void Dbus::deleteProblem(QStringList* problems)
 {
     QDBusReply<void> reply = dInterface->call("DeleteProblem", *problems);
