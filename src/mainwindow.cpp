@@ -1,5 +1,6 @@
 #include <QListView>
 #include <stdio.h>
+#include <KLocalizedString>
 #include "mainwindow.h"
 #include "dbus.h"
 
@@ -8,10 +9,10 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     allProblems = false;
     dbus = new Dbus();
 
-    buttonGetProblems = new KPushButton("get problems", this);
-    buttonGetAllProblems = new KPushButton("get all problems", this);
-    buttonDelete = new KPushButton("delete problem", this);
-    buttonReport = new KPushButton("report problem", this);
+    buttonGetProblems = new KPushButton(i18n("get problems"), this);
+    buttonGetAllProblems = new KPushButton(i18n("get all problems"), this);
+    buttonDelete = new KPushButton(i18n("delete problem"), this);
+    buttonReport = new KPushButton(i18n("report problem"), this);
 
     connect(buttonGetProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetProblems_clicked()));
     connect(buttonGetAllProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetAllProblems_clicked()));
