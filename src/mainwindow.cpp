@@ -80,7 +80,9 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     //executable
     labelDescription->setText(item->data(Qt::UserRole).toString());
     label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
-    label2->setText(item->data(Qt::UserRole + 2).toString()); //time
+    QString timeInString = item->data(Qt::UserRole + 2).toString();
+    uint timeInInt = timeInString.toUInt();
+    label2->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
     label3->setText(item->data(Qt::UserRole + 3).toString()); //count
     label4->setText(item->data(Qt::UserRole + 4).toString()); //id
     labelName->setText(text);
