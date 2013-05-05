@@ -26,12 +26,13 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     vLeftLayout = new QVBoxLayout;
     vRightLayout = new QVBoxLayout;
     hRightLayout = new QHBoxLayout;
-    labelName = new QLabel("label");
-    labelDescription = new QLabel("label");
-    label1 = new QLabel();
-    label2 = new QLabel();
-    label3 = new QLabel();
-    label4 = new QLabel();
+    labelDescription = new QLabel("labelDescription");
+    label1 = new QLabel("label1");
+    label2 = new QLabel("label2");
+    label3 = new QLabel("label3");
+    label4 = new QLabel("label4");
+
+
 
     listWidget = new KListWidget();
 
@@ -48,7 +49,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     widget->setMinimumWidth(400);
     widget->setMaximumWidth(400);
     hLayout->addWidget(widget);
-    vRightLayout->addWidget(labelName);
     vRightLayout->addWidget(labelDescription);
     vRightLayout->addWidget(label1);
     vRightLayout->addWidget(label2);
@@ -75,20 +75,16 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*)
 {
     if (item == NULL) return;
-    QString text = item->text();
-    //QString desc = item->data(Qt::UserRole).toString();
-    //executable
-    labelDescription->setText(item->data(Qt::UserRole).toString());
+
+    labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
     label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
     label2->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
     label3->setText(item->data(Qt::UserRole + 3).toString()); //count
     label4->setText(item->data(Qt::UserRole + 4).toString()); //id
-    labelName->setText(text);
-    //labelDescription->setText();
 
-    fprintf(stderr , "%s\n", qPrintable(text));               //debug
+    fprintf(stderr , "%s\n", qPrintable(item->data(Qt::UserRole + 4).toString()));              //debug
 }
 
 void MainWindow::on_buttonGetProblems_clicked()
@@ -162,14 +158,25 @@ void MainWindow::getAllProblems(bool allProblems)
     QListWidgetItem* widgetItem;
     for (int i = 0; i < list->size(); i++) {
         item = list->at(i);
-        widgetItem = new QListWidgetItem(item->getPkg_name());
+        widgetItem = new QListWidgetItem();
         widgetItem->setData(Qt::UserRole, item->getExecutable());
         widgetItem->setData(Qt::UserRole + 1, item->getPkg_name());
         widgetItem->setData(Qt::UserRole + 2, item->getTime());
         widgetItem->setData(Qt::UserRole + 3, item->getCount());
         widgetItem->setData(Qt::UserRole + 4, item->getID());
 
+        //listWidget->addItem(widgetItem);
+        QWidget* myWidget = new QWidget();
+        QGridLayout* gridLayout = new QGridLayout();
+        gridLayout->addWidget(new QLabel(item->getExecutable()), 0, 0);
+        gridLayout->addWidget(new QLabel(item->getCount()), 0, 1);
+        gridLayout->addWidget(new QLabel("botleft"), 1, 0);
+        gridLayout->addWidget(new QLabel("botright"), 1, 1);
+        myWidget->setLayout(gridLayout);
+        widgetItem->setSizeHint(QSize(0, 40));
         listWidget->addItem(widgetItem);
+        listWidget->setItemWidget(widgetItem, myWidget);
+        listWidget->setAlternatingRowColors(true);
         delete(item);
     }
     delete(list);

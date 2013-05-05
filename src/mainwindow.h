@@ -35,7 +35,6 @@ private:
     KPushButton* buttonReport;
     KListWidgetSearchLine* searchLine;
 
-    QLabel* labelName;
     QLabel* labelDescription;
     QLabel* label1;
     QLabel* label2;
