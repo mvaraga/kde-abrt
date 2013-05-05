@@ -8,6 +8,7 @@ set(kde-abrt_SRCS
   mainwindow.cpp
   problemdata.cpp
   dbus.cpp
+  customsearchline.cpp
 )
 
 

@@ -37,7 +37,8 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     listWidget = new KListWidget();
 
     listWidget->setSelectionMode(KListWidget::ExtendedSelection);
-    searchLine = new KListWidgetSearchLine(this, listWidget);
+    //searchLine = new KListWidgetSearchLine(this, listWidget);
+    searchLine = new CustomSearchLine(this, listWidget);
 
     getProblems();
 

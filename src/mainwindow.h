@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <KPushButton>
+#include "customsearchline.h"
 #include "problemdata.h"
 
 class QListView;
