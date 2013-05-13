@@ -1,12 +1,9 @@
-#include <QListView>
-#include <stdio.h>
 #include <KLocalizedString>
 #include "mainwindow.h"
 #include "dbus.h"
 
 MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 {
-    crash();
     allProblems = false;
     dbus = new Dbus();
 
@@ -15,6 +12,8 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     buttonDelete = new KPushButton(i18n("delete problem"), this);
     buttonReport = new KPushButton(i18n("report problem"), this);
 
+    notif = new KStatusNotifierItem(this);
+
     connect(buttonGetProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetProblems_clicked()));
     connect(buttonGetAllProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetAllProblems_clicked()));
     connect(buttonDelete, SIGNAL(clicked(bool)), this, SLOT(on_buttonDelete_clicked()));
@@ -22,7 +21,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 
     widget = new QWidget;
     master = new QWidget;
-    //layout = new QVBoxLayout;
     hLayout = new QHBoxLayout;
     vLeftLayout = new QVBoxLayout;
     vRightLayout = new QVBoxLayout;
@@ -38,7 +36,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     listWidget = new KListWidget();
 
     listWidget->setSelectionMode(KListWidget::ExtendedSelection);
-    //searchLine = new KListWidgetSearchLine(this, listWidget);
     searchLine = new CustomSearchLine(this, listWidget);
 
     getProblems();
@@ -70,6 +67,9 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     connect(listWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
             this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
            );
+
+    QDBusConnection::systemBus().connect(QString(), "/org/freedesktop/problems", "org.freedesktop.problems", "Crash",
+                                         this, SLOT(crash(const QString&, const QString&, const QString&)));
 
 // setupGUI();
 }
@@ -186,10 +186,15 @@ void MainWindow::getAllProblems(bool allProblems)
 
 void MainWindow::crash()
 {
-    notif = new KStatusNotifierItem(this);
     notif->setStatus(KStatusNotifierItem::Active);
     notif->setIconByName("/usr/share/abrt/icons/hicolor/22x22/status/abrt.png"); //todo: set my icon
     notif->setToolTip("/usr/share/abrt/icons/hicolor/256x256/status/abrt.png", "bbb", "ccc");
     notif->setCategory(KStatusNotifierItem::ApplicationStatus);
     notif->showMessage("title", "message", "/usr/share/abrt/icons/hicolor/256x256/status/abrt.png", 2);
 }
+
+void MainWindow::crash(const QString& package, const QString& problem_id, const QString& uid)
+{
+    notif->showMessage("A Problem has Occurred", "A problem in the " + package + " package has been detected", "/usr/share/abrt/icons/hicolor/256x256/status/abrt.png", 2);
+}
+

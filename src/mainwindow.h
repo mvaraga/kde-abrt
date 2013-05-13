@@ -12,7 +12,6 @@
 #include "customsearchline.h"
 #include "problemdata.h"
 
-class QListView;
 class Dbus;
 
 class MainWindow : public KXmlGuiWindow
@@ -58,6 +57,8 @@ private slots:
     void on_buttonDelete_clicked();
     void on_buttonReport_clicked();
     void on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*);
+
+    void crash(const QString &, const QString &, const QString &);
 };
 
 #endif
