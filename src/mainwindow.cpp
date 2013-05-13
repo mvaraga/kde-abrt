@@ -6,6 +6,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
 {
+    crash();
     allProblems = false;
     dbus = new Dbus();
 
@@ -181,4 +182,14 @@ void MainWindow::getAllProblems(bool allProblems)
         delete(item);
     }
     delete(list);
+}
+
+void MainWindow::crash()
+{
+    notif = new KStatusNotifierItem(this);
+    notif->setStatus(KStatusNotifierItem::Active);
+    notif->setIconByName("/usr/share/abrt/icons/hicolor/22x22/status/abrt.png"); //todo: set my icon
+    notif->setToolTip("/usr/share/abrt/icons/hicolor/256x256/status/abrt.png", "bbb", "ccc");
+    notif->setCategory(KStatusNotifierItem::ApplicationStatus);
+    notif->showMessage("title", "message", "/usr/share/abrt/icons/hicolor/256x256/status/abrt.png", 2);
 }
