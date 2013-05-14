@@ -23,7 +23,6 @@ public:
 private:
     void getProblems();
     void getAllProblems(bool allProblems = true);
-    void crash();
 
     QWidget* master;
     KListWidget* listWidget; //widget
@@ -56,6 +55,7 @@ private slots:
     void on_buttonReport_clicked();
     void on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*);
 
+    void crash(const QString &, const QString &, const QString &);
 };
 
 #endif

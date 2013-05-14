@@ -66,8 +66,8 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
             this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
            );
 
-//     QDBusConnection::systemBus().connect(QString(), "/org/freedesktop/problems", "org.freedesktop.problems", "Crash",
-//                                          this, SLOT(crash(const QString&, const QString&, const QString&)));
+     QDBusConnection::systemBus().connect(QString(), "/org/freedesktop/problems", "org.freedesktop.problems", "Crash",
+                                          this, SLOT(crash(const QString&, const QString&, const QString&)));
 
 // setupGUI();
 }
@@ -146,7 +146,8 @@ void MainWindow::getProblems()
 
 void MainWindow::getAllProblems(bool allProblems)
 {
-    QList<ProblemData*>* list = dbus->getProblems(allProblems);
+    this->allProblems=allProblems;
+    QList<ProblemData*>* list = dbus->getProblems(this->allProblems);
 
     if (list->empty()) {
         fprintf(stderr, "empty list");
@@ -180,4 +181,9 @@ void MainWindow::getAllProblems(bool allProblems)
         delete(item);
     }
     delete(list);
+}
+
+void MainWindow::crash(const QString& , const QString& , const QString&)
+{
+  getAllProblems(allProblems);
 }
