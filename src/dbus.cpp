@@ -55,8 +55,6 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
         ProblemData* item;
 
         for (int i = 0; i < stringList.size(); ++i) {
-            //printf("%s\n", qPrintable(stringList.at(i)));
-
             QDBusReply<QMap<QString, QString> > replyInfo = dInterface->call("GetInfo", stringList.at(i), *stats);
 
             if (replyInfo.isValid()) {
@@ -67,9 +65,8 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
                 item->setCount(replyInfo.value().value(statCount));
                 item->setTime(replyInfo.value().value(statTime));
                 list->append(item);
-                //printf("\t%s\n", qPrintable(replyInfo.value().value("executable")));
             } else {
-                fprintf(stderr, "replyInfo failed: %s\n", qPrintable(replyInfo.error().message()));
+                qDebug("replyInfo failed: %s", qPrintable(replyInfo.error().message()));
             }
         }
         delete(stats);
@@ -78,7 +75,7 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
         return list;
 
     } else {
-        fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
+        qDebug("Call failed: %s\n", qPrintable(reply.error().message()));
         return NULL;
     }
 
@@ -95,7 +92,7 @@ void Dbus::deleteProblem(QStringList* problems)
     QDBusReply<void> reply = dInterface->call("DeleteProblem", *problems);
     if (reply.isValid()) return;
     else {
-        fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
+        qDebug("Call failed: %s\n", qPrintable(reply.error().message()));
     }
 }
 

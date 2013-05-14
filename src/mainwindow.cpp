@@ -1,4 +1,5 @@
 #include <KLocalizedString>
+#include <KDebug>
 #include "mainwindow.h"
 #include "dbus.h"
 
@@ -83,8 +84,7 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     label2->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
     label3->setText(item->data(Qt::UserRole + 3).toString()); //count
     label4->setText(item->data(Qt::UserRole + 4).toString()); //id
-
-    fprintf(stderr , "%s\n", qPrintable(item->data(Qt::UserRole + 4).toString()));              //debug
+    qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
 }
 
 void MainWindow::on_buttonGetProblems_clicked()
@@ -104,7 +104,7 @@ void MainWindow::on_buttonDelete_clicked()
     QStringList* stringList = new QStringList();
 
     if (list.isEmpty()) {
-        fprintf(stderr, "warning: no item(s) selected\n");
+        qDebug("warning: no item(s) selected");
         return;
     }
     if (list.size() == 1) {
@@ -124,12 +124,11 @@ void MainWindow::on_buttonReport_clicked()
     QList<QListWidgetItem*> list = listWidget->selectedItems();
     QStringList stringList;
     if (list.isEmpty()) {
-        fprintf(stderr, "warning: no item(s) selected\n");
+        qDebug("warning: no item(s) selected");
         return;
     }
 
     if (list.size() == 1) {
-        printf(LIBEXEC_DIR"/abrt-handle-event");
         stringList.append("-e");
         stringList.append("report-gui");
         stringList.append("--");
@@ -150,7 +149,7 @@ void MainWindow::getAllProblems(bool allProblems)
     QList<ProblemData*>* list = dbus->getProblems(this->allProblems);
 
     if (list->empty()) {
-        fprintf(stderr, "empty list");
+        qDebug("empty list");
     }
 
     listWidget->clear();                                      //remove duplicates
