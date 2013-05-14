@@ -8,7 +8,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <KPushButton>
-#include <KStatusNotifierItem>
 #include "customsearchline.h"
 #include "problemdata.h"
 
@@ -39,7 +38,6 @@ private:
     KPushButton* buttonDelete;
     KPushButton* buttonReport;
     KListWidgetSearchLine* searchLine;
-    KStatusNotifierItem* notif;
 
     QLabel* labelDescription;
     QLabel* label1;
@@ -58,7 +56,6 @@ private slots:
     void on_buttonReport_clicked();
     void on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*);
 
-    void crash(const QString &, const QString &, const QString &);
 };
 
 #endif
