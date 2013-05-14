@@ -7,6 +7,8 @@
 
 class ProblemData;
 
+bool comp(ProblemData*, ProblemData*);
+
 typedef QMap <QString, QString> MetaMap;
 Q_DECLARE_METATYPE(MetaMap)
 

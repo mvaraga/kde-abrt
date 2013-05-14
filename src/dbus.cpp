@@ -2,6 +2,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QtDBus>
 #include <QListWidget>
+#include <QtAlgorithms>
 #include "dbus.h"
 #include "problemdata.h"
 
@@ -72,6 +73,8 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
             }
         }
         delete(stats);
+	qSort(list->begin(), list->end(), comp);
+
         return list;
 
     } else {
@@ -94,4 +97,8 @@ void Dbus::deleteProblem(QStringList* problems)
     else {
         fprintf(stderr, "Call failed: %s\n", qPrintable(reply.error().message()));
     }
+}
+
+bool comp(ProblemData* left, ProblemData *right) {
+  return left->getTime() < right->getTime();
 }
