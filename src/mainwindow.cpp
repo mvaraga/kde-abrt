@@ -8,15 +8,18 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     allProblems = false;
     dbus = new Dbus();
 
+    listWidget = new KListWidget(this);
     buttonGetProblems = new KPushButton(i18n("get problems"), this);
     buttonGetAllProblems = new KPushButton(i18n("get all problems"), this);
     buttonDelete = new KPushButton(i18n("delete problem"), this);
     buttonReport = new KPushButton(i18n("report problem"), this);
-
-    connect(buttonGetProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetProblems_clicked()));
-    connect(buttonGetAllProblems, SIGNAL(clicked(bool)), this, SLOT(on_buttonGetAllProblems_clicked()));
-    connect(buttonDelete, SIGNAL(clicked(bool)), this, SLOT(on_buttonDelete_clicked()));
-    connect(buttonReport, SIGNAL(clicked(bool)), this, SLOT(on_buttonReport_clicked()));
+    buttonGetProblems->setObjectName("buttonGetProblems");
+    buttonGetAllProblems->setObjectName("buttonGetAllProblems");
+    buttonDelete->setObjectName("buttonDelete");
+    buttonReport->setObjectName("buttonReport");
+    listWidget->setObjectName("listWidget");
+    
+    QMetaObject::connectSlotsByName(this);
 
     widget = new QWidget;
     master = new QWidget;
@@ -29,10 +32,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     label2 = new QLabel("label2");
     label3 = new QLabel("label3");
     label4 = new QLabel("label4");
-
-
-
-    listWidget = new KListWidget();
 
     listWidget->setSelectionMode(KListWidget::ExtendedSelection);
     searchLine = new CustomSearchLine(this, listWidget);
@@ -62,10 +61,6 @@ MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
     master->setLayout(hLayout);
 
     setCentralWidget(master);
-
-    connect(listWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-            this, SLOT(on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*))
-           );
 
      QDBusConnection::systemBus().connect(QString(), "/org/freedesktop/problems", "org.freedesktop.problems", "Crash",
                                           this, SLOT(crash(const QString&, const QString&, const QString&)));
