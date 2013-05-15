@@ -9,29 +9,29 @@ public:
     ProblemData();
     ProblemData(QString name, QString desc);
     ProblemData(QString name, QString executable, QString pkg_name, QString count, QString time); //bad
-    QString getName();
+    QString name() const;
     void setName(QString);
-    QString getDesc();
+    QString desc() const;
     void setDesc(QString);
-    QString getExecutable();
+    QString executable() const;
     void setExecutable(QString);
-    QString getTime();
+    QString time() const;
     void setTime(QString);
-    QString getPkg_name();
+    QString pkg_name() const;
     void setPkg_name(QString);
-    QString getCount();
+    QString count() const;
     void setCount(QString);
-    QString getID();
-    void setID(QString);
+    QString id() const;
+    void setId(QString);
 
 private:
-    QString name;
-    QString desc;
-    QString executable;
-    QString time;
-    QString count;
-    QString pkg_name;
-    QString id;
+    QString m_name;
+    QString m_desc;
+    QString m_executable;
+    QString m_time;
+    QString m_count;
+    QString m_pkg_name;
+    QString m_id;
 };
 
 #endif // PROBLEMDATA_H

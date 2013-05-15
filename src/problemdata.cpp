@@ -4,73 +4,73 @@ ProblemData::ProblemData()
 {
 }
 
-QString ProblemData::getDesc()
+QString ProblemData::desc() const
 {
-    return desc;
+    return m_desc;
 }
 
 void ProblemData::setDesc(QString desc)
 {
-    this->desc = desc;
+    this->m_desc = desc;
 }
 
-QString ProblemData::getName()
+QString ProblemData::name() const
 {
-    return name;
+    return m_name;
 }
 
 void ProblemData::setName(QString name)
 {
-    this->name = name;
+    this->m_name = name;
 
 }
 
-QString ProblemData::getCount()
+QString ProblemData::count() const
 {
-    return count;
+    return m_count;
 }
 
 void ProblemData::setCount(QString count)
 {
-    this->count = count;
+    this->m_count = count;
 }
 
-QString ProblemData::getExecutable()
+QString ProblemData::executable() const
 {
-    return executable;
+    return m_executable;
 }
 
 void ProblemData::setExecutable(QString executable)
 {
-    this->executable = executable;
+    this->m_executable = executable;
 }
 
-QString ProblemData::getPkg_name()
+QString ProblemData::pkg_name() const
 {
-    return pkg_name;
+    return m_pkg_name;
 }
 
 void ProblemData::setPkg_name(QString pkg_name)
 {
-    this->pkg_name = pkg_name;
+    this->m_pkg_name = pkg_name;
 }
 
-QString ProblemData::getTime()
+QString ProblemData::time() const
 {
-    return time;
+    return m_time;
 }
 
 void ProblemData::setTime(QString time)
 {
-    this->time = time;
+    this->m_time = time;
 }
 
-QString ProblemData::getID()
+QString ProblemData::id() const
 {
-    return id;
+    return m_id;
 }
 
-void ProblemData::setID(QString id)
+void ProblemData::setId(QString id)
 {
-    this->id = id;
+    this->m_id = id;
 }

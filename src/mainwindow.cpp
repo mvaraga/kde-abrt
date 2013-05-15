@@ -159,17 +159,17 @@ void MainWindow::getAllProblems(bool allProblems)
     for (int i = 0; i < list->size(); i++) {
         item = list->at(i);
         widgetItem = new QListWidgetItem();
-        widgetItem->setData(Qt::UserRole, item->getExecutable());
-        widgetItem->setData(Qt::UserRole + 1, item->getPkg_name());
-        widgetItem->setData(Qt::UserRole + 2, item->getTime());
-        widgetItem->setData(Qt::UserRole + 3, item->getCount());
-        widgetItem->setData(Qt::UserRole + 4, item->getID());
+        widgetItem->setData(Qt::UserRole, item->executable());
+        widgetItem->setData(Qt::UserRole + 1, item->pkg_name());
+        widgetItem->setData(Qt::UserRole + 2, item->time());
+        widgetItem->setData(Qt::UserRole + 3, item->count());
+        widgetItem->setData(Qt::UserRole + 4, item->id());
 
         //listWidget->addItem(widgetItem);
         QWidget* myWidget = new QWidget();
         QGridLayout* gridLayout = new QGridLayout();
-        gridLayout->addWidget(new QLabel(item->getExecutable()), 0, 0);
-        gridLayout->addWidget(new QLabel(item->getCount()), 0, 1);
+        gridLayout->addWidget(new QLabel(item->executable()), 0, 0);
+        gridLayout->addWidget(new QLabel(item->count()), 0, 1);
         gridLayout->addWidget(new QLabel("botleft"), 1, 0);
         gridLayout->addWidget(new QLabel("botright"), 1, 1);
         myWidget->setLayout(gridLayout);

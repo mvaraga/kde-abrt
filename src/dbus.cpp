@@ -59,7 +59,7 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 
             if (replyInfo.isValid()) {
                 item = new ProblemData();
-                item->setID(stringList.at(i));
+                item->setId(stringList.at(i));
                 item->setExecutable(replyInfo.value().value(statExecutable));
                 item->setPkg_name(replyInfo.value().value(statPkg_name));
                 item->setCount(replyInfo.value().value(statCount));
@@ -97,5 +97,5 @@ void Dbus::deleteProblem(QStringList* problems)
 }
 
 bool comp(ProblemData* left, ProblemData *right) {
-  return left->getTime() < right->getTime();
+  return left->time() < right->time();
 }
