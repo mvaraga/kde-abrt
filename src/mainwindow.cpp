@@ -1,5 +1,10 @@
 #include <KLocalizedString>
 #include <KDebug>
+#include <KApplication>
+#include <KAction>
+#include <KLocale>
+#include <KActionCollection>
+#include <KStandardAction>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dbus.h"
@@ -29,16 +34,6 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     ui->label3->setText(item->data(Qt::UserRole + 3).toString()); //count
     ui->label4->setText(item->data(Qt::UserRole + 4).toString()); //id
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
-}
-
-void MainWindow::on_buttonGetProblems_clicked()
-{
-    getProblems();
-}
-
-void MainWindow::on_buttonGetAllProblems_clicked()
-{
-    getAllProblems();
 }
 
 void MainWindow::on_buttonDelete_clicked()
@@ -129,4 +124,44 @@ void MainWindow::getAllProblems(bool allProblems)
 void MainWindow::crash(const QString& , const QString& , const QString&)
 {
     getAllProblems(ui->allProblems);
+}
+
+void MainWindow::setupActions()
+{
+    KAction* getProblemsAction = new KAction(this);
+    getProblemsAction->setText(i18n("&Get all problems"));
+    getProblemsAction->setIcon(KIcon("document-new"));
+    getProblemsAction->setShortcut(Qt::CTRL + Qt::Key_W);
+    actionCollection()->addAction("getProblems", getProblemsAction);
+//   connect(clearAction, SIGNAL(triggered(bool)),
+//           textArea, SLOT(clear()));
+
+//   KStandardAction::quit(app, SLOT(quit()),
+//                         actionCollection());
+
+    setupGUI(Default, "kde-abrtui.rc");
+}
+
+void MainWindow::on_getProblemsAction_triggered(bool check)
+{
+    if (check) {
+        this->getProblems();
+        if (ui->getAllProblemsAction->isChecked()) {
+            ui->getAllProblemsAction->setChecked(false);
+        }
+    } else {
+        ui->getProblemsAction->setChecked(true);
+    }
+}
+
+void MainWindow::on_getAllProblemsAction_triggered(bool check)
+{
+    if (check) {
+        this->getAllProblems();
+        if (ui->getProblemsAction->isChecked()) {
+            ui->getProblemsAction->setChecked(false);
+        }
+    } else {
+        ui->getAllProblemsAction->setChecked(true);
+    }
 }

@@ -1,6 +1,14 @@
 #ifndef UI_MAINWINDOW_H
 #define UI_MAINWINDOW_H
 
+#include <KLocalizedString>
+#include <KDebug>
+#include <KApplication>
+#include <KAction>
+#include <KLocale>
+#include <KActionCollection>
+#include <KStandardAction>
+#include <KXmlGuiWindow>
 #include "dbus.h"
 
 QT_BEGIN_NAMESPACE
@@ -9,15 +17,13 @@ class Ui_MainWindow
 {
 public:
     QWidget* master;
-    KListWidget* listWidget; //widget
+    KListWidget* listWidget;
     QVBoxLayout* layout;
     QHBoxLayout* hLayout;
     QVBoxLayout* vLeftLayout;
     QVBoxLayout* vRightLayout;
     QHBoxLayout* hRightLayout;
     QWidget* widget;
-    KPushButton* buttonGetProblems;
-    KPushButton* buttonGetAllProblems;
     KPushButton* buttonDelete;
     KPushButton* buttonReport;
     KListWidgetSearchLine* searchLine;
@@ -32,17 +38,39 @@ public:
 
     bool allProblems;
 
-    void setupUi(QMainWindow* MainWindow) {
+    KAction* getAllProblemsAction;
+    KAction* getProblemsAction;
+
+    void setupUi(KXmlGuiWindow* MainWindow) {
+
+        getProblemsAction = new KAction(MainWindow);
+        getAllProblemsAction = new KAction(MainWindow);
+        getProblemsAction->setText(i18n("&Get Problems"));
+        getAllProblemsAction->setText(i18n("Get &All Problems"));
+        MainWindow->actionCollection()->addAction("getProblems", getProblemsAction);
+        MainWindow->actionCollection()->addAction("getAllProblems", getAllProblemsAction);
+        getProblemsAction->setIcon(KIcon("document-new")); //bad icon
+        getAllProblemsAction->setIcon(KIcon("document-new")); //bad icon
+        getProblemsAction->setCheckable(true);
+        getAllProblemsAction->setCheckable(true);
+
+        getProblemsAction->setObjectName("getProblemsAction");
+        getAllProblemsAction->setObjectName("getAllProblemsAction");
+
+        getProblemsAction->setChecked(true);
+
+//      getProblemsAction->setShortcut(Qt::CTRL + Qt::Key_W);
+//      connect(clearAction, SIGNAL(triggered(bool)),
+//           textArea, SLOT(clear()));
+//      KStandardAction::quit(kapp, SLOT(quit()),
+//                        MainWindow->actionCollection());
+
         allProblems = false;
         dbus = new Dbus();
 
         listWidget = new KListWidget(MainWindow);
-        buttonGetProblems = new KPushButton(i18n("get problems"), MainWindow);
-        buttonGetAllProblems = new KPushButton(i18n("get all problems"), MainWindow);
         buttonDelete = new KPushButton(i18n("delete problem"), MainWindow);
         buttonReport = new KPushButton(i18n("report problem"), MainWindow);
-        buttonGetProblems->setObjectName("buttonGetProblems");
-        buttonGetAllProblems->setObjectName("buttonGetAllProblems");
         buttonDelete->setObjectName("buttonDelete");
         buttonReport->setObjectName("buttonReport");
         listWidget->setObjectName("listWidget");
@@ -64,8 +92,6 @@ public:
 
         vLeftLayout->addWidget(searchLine);
         vLeftLayout->addWidget(listWidget);
-        vLeftLayout->addWidget(buttonGetProblems);
-        vLeftLayout->addWidget(buttonGetAllProblems);
         widget->setLayout(vLeftLayout);
         widget->setMinimumWidth(400);
         widget->setMaximumWidth(400);
@@ -87,6 +113,8 @@ public:
         MainWindow->setCentralWidget(master);
 
         QMetaObject::connectSlotsByName(MainWindow);
+        MainWindow->setupGUI(KXmlGuiWindow::StandardWindowOption::Default, "kde-abrtui.rc");
+
     } // setupUi
 };
 

@@ -31,13 +31,14 @@ private:
 
     void getProblems();
     void getAllProblems(bool allProblems = true);
+    void setupActions();
 
 private slots:
-    void on_buttonGetProblems_clicked();
-    void on_buttonGetAllProblems_clicked();
     void on_buttonDelete_clicked();
     void on_buttonReport_clicked();
     void on_listWidget_currentItemChanged(QListWidgetItem*, QListWidgetItem*);
+    void on_getProblemsAction_triggered(bool);
+    void on_getAllProblemsAction_triggered(bool);
 
     void crash(const QString&, const QString&, const QString&);
 };
