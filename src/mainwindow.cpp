@@ -1,84 +1,33 @@
 #include <KLocalizedString>
 #include <KDebug>
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include "dbus.h"
 
-MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent)
+MainWindow::MainWindow(QWidget* parent) : KXmlGuiWindow(parent), ui(new Ui::MainWindow)
 {
-    allProblems = false;
-    dbus = new Dbus();
+    ui->setupUi(this);
+    this->getProblems();
+    QDBusConnection::systemBus().connect(QString(), "/org/freedesktop/problems", "org.freedesktop.problems", "Crash",
+                                         this, SLOT(crash(const QString&, const QString&, const QString&)));
+}
 
-    listWidget = new KListWidget(this);
-    buttonGetProblems = new KPushButton(i18n("get problems"), this);
-    buttonGetAllProblems = new KPushButton(i18n("get all problems"), this);
-    buttonDelete = new KPushButton(i18n("delete problem"), this);
-    buttonReport = new KPushButton(i18n("report problem"), this);
-    buttonGetProblems->setObjectName("buttonGetProblems");
-    buttonGetAllProblems->setObjectName("buttonGetAllProblems");
-    buttonDelete->setObjectName("buttonDelete");
-    buttonReport->setObjectName("buttonReport");
-    listWidget->setObjectName("listWidget");
-    
-    QMetaObject::connectSlotsByName(this);
-
-    widget = new QWidget;
-    master = new QWidget;
-    hLayout = new QHBoxLayout;
-    vLeftLayout = new QVBoxLayout;
-    vRightLayout = new QVBoxLayout;
-    hRightLayout = new QHBoxLayout;
-    labelDescription = new QLabel("labelDescription");
-    label1 = new QLabel("label1");
-    label2 = new QLabel("label2");
-    label3 = new QLabel("label3");
-    label4 = new QLabel("label4");
-
-    listWidget->setSelectionMode(KListWidget::ExtendedSelection);
-    searchLine = new CustomSearchLine(this, listWidget);
-
-    getProblems();
-
-    vLeftLayout->addWidget(searchLine);
-    vLeftLayout->addWidget(listWidget);
-    vLeftLayout->addWidget(buttonGetProblems);
-    vLeftLayout->addWidget(buttonGetAllProblems);
-    widget->setLayout(vLeftLayout);
-    widget->setMinimumWidth(400);
-    widget->setMaximumWidth(400);
-    hLayout->addWidget(widget);
-    vRightLayout->addWidget(labelDescription);
-    vRightLayout->addWidget(label1);
-    vRightLayout->addWidget(label2);
-    vRightLayout->addWidget(label3);
-    vRightLayout->addWidget(label4);
-
-    hRightLayout->addWidget(buttonDelete);
-    hRightLayout->addWidget(buttonReport);
-    vRightLayout->addLayout(hRightLayout);
-
-    hLayout->addLayout(vRightLayout);
-
-    master->setLayout(hLayout);
-
-    setCentralWidget(master);
-
-     QDBusConnection::systemBus().connect(QString(), "/org/freedesktop/problems", "org.freedesktop.problems", "Crash",
-                                          this, SLOT(crash(const QString&, const QString&, const QString&)));
-
-// setupGUI();
+MainWindow::~MainWindow()
+{
+    delete ui;
 }
 
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*)
 {
     if (item == NULL) return;
 
-    labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
-    label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
+    ui->labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
+    ui->label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
-    label2->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
-    label3->setText(item->data(Qt::UserRole + 3).toString()); //count
-    label4->setText(item->data(Qt::UserRole + 4).toString()); //id
+    ui->label2->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
+    ui->label3->setText(item->data(Qt::UserRole + 3).toString()); //count
+    ui->label4->setText(item->data(Qt::UserRole + 4).toString()); //id
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
 }
 
@@ -94,7 +43,7 @@ void MainWindow::on_buttonGetAllProblems_clicked()
 
 void MainWindow::on_buttonDelete_clicked()
 {
-    QList<QListWidgetItem*> list = listWidget->selectedItems();
+    QList<QListWidgetItem*> list = ui->listWidget->selectedItems();
     QListWidgetItem* item;
     QStringList* stringList = new QStringList();
 
@@ -104,19 +53,19 @@ void MainWindow::on_buttonDelete_clicked()
     }
     if (list.size() == 1) {
         item = list.at(0);
-        dbus->deleteProblem(new QStringList(item->data(Qt::UserRole + 4).toString()));
+        ui->dbus->deleteProblem(new QStringList(item->data(Qt::UserRole + 4).toString()));
     } else {
         foreach (item, list) {
             stringList->append(item->text());
-            dbus->deleteProblem(stringList);
+            ui->dbus->deleteProblem(stringList);
         }
     }
-    getAllProblems(allProblems);
+    getAllProblems(ui->allProblems);
 }
 
 void MainWindow::on_buttonReport_clicked()
 {
-    QList<QListWidgetItem*> list = listWidget->selectedItems();
+    QList<QListWidgetItem*> list = ui->listWidget->selectedItems();
     QStringList stringList;
     if (list.isEmpty()) {
         qDebug("warning: no item(s) selected");
@@ -137,17 +86,17 @@ void MainWindow::getProblems()
 {
     getAllProblems(false);
 }
-
+//
 void MainWindow::getAllProblems(bool allProblems)
 {
-    this->allProblems=allProblems;
-    QList<ProblemData*>* list = dbus->getProblems(this->allProblems);
+    ui->allProblems = allProblems;
+    QList<ProblemData*>* list = ui->dbus->getProblems(ui->allProblems);
 
     if (list->empty()) {
         qDebug("empty list");
     }
 
-    listWidget->clear();                                      //remove duplicates
+    ui->listWidget->clear();                                      //remove duplicates
 
     ProblemData* item;
     QListWidgetItem* widgetItem;
@@ -169,9 +118,9 @@ void MainWindow::getAllProblems(bool allProblems)
         gridLayout->addWidget(new QLabel("botright"), 1, 1);
         myWidget->setLayout(gridLayout);
         widgetItem->setSizeHint(QSize(0, 40));
-        listWidget->addItem(widgetItem);
-        listWidget->setItemWidget(widgetItem, myWidget);
-        listWidget->setAlternatingRowColors(true);
+        ui->listWidget->addItem(widgetItem);
+        ui->listWidget->setItemWidget(widgetItem, myWidget);
+        ui->listWidget->setAlternatingRowColors(true);
         delete(item);
     }
     delete(list);
@@ -179,5 +128,5 @@ void MainWindow::getAllProblems(bool allProblems)
 
 void MainWindow::crash(const QString& , const QString& , const QString&)
 {
-  getAllProblems(allProblems);
+    getAllProblems(ui->allProblems);
 }

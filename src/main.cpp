@@ -4,8 +4,7 @@
 #include <KLocale>
 
 #include "mainwindow.h"
-#include "ui_mydialog.h"
-#include "mydialog.h"
+
 
 int main(int argc, char* argv[])
 {
