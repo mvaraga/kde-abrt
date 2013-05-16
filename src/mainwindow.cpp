@@ -25,14 +25,25 @@ MainWindow::~MainWindow()
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*)
 {
     if (item == NULL) return;
-
-    ui->labelDescription->setText(item->data(Qt::UserRole).toString()); //executable
-    ui->label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
+    /*
+        (Qt::UserRole, item->executable());
+        (Qt::UserRole + 1, item->pkg_name());
+        (Qt::UserRole + 2, item->time());
+        (Qt::UserRole + 3, item->count());
+        (Qt::UserRole + 4, item->id());
+        (Qt::UserRole + 5, item->reported_to());
+        (Qt::UserRole + 6, item->package());*/
+    ui->labelTitle->setText(item->data(Qt::UserRole + 1).toString() + i18n(" crashed")); //name
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
-    ui->labelName->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
-    ui->labelVersion->setText(item->data(Qt::UserRole + 3).toString()); //count
-    ui->labelReported->setText(item->data(Qt::UserRole + 4).toString()); //id
+    ui->labelDetectedValue->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
+    QString reported_to = item->data(Qt::UserRole + 5).toString();
+    if (reported_to.isEmpty()) {
+        reported_to = "no";
+    }
+    ui->labelReportedValue->setText(reported_to); //reported_to
+    ui->labelVersionValue->setText(item->data(Qt::UserRole + 6).toString()); //package
+    ui->labelNameValue->setText(item->data(Qt::UserRole + 1).toString()); //name
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
 }
 
@@ -103,11 +114,13 @@ void MainWindow::getAllProblems(bool allProblems)
         widgetItem->setData(Qt::UserRole + 2, item->time());
         widgetItem->setData(Qt::UserRole + 3, item->count());
         widgetItem->setData(Qt::UserRole + 4, item->id());
+        widgetItem->setData(Qt::UserRole + 5, item->reported_to());
+        widgetItem->setData(Qt::UserRole + 6, item->package());
 
         //listWidget->addItem(widgetItem);
         QWidget* myWidget = new QWidget();
         QGridLayout* gridLayout = new QGridLayout();
-        gridLayout->addWidget(new QLabel(item->executable()), 0, 0);
+        gridLayout->addWidget(new QLabel(item->pkg_name()), 0, 0);
         gridLayout->addWidget(new QLabel("topright"), 0, 1);
         gridLayout->addWidget(new QLabel("botleft"), 1, 0);
         gridLayout->addWidget(new QLabel(item->count()), 1, 1);

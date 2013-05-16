@@ -4,24 +4,24 @@ ProblemData::ProblemData()
 {
 }
 
-QString ProblemData::desc() const
+QString ProblemData::reported_to() const
 {
-    return m_desc;
+    return m_reported_to;
 }
 
-void ProblemData::setDesc(QString desc)
+void ProblemData::setReported_to(QString reported_to)
 {
-    this->m_desc = desc;
+    this->m_reported_to = reported_to;
 }
 
-QString ProblemData::name() const
+QString ProblemData::package() const
 {
-    return m_name;
+    return m_package;
 }
 
-void ProblemData::setName(QString name)
+void ProblemData::setPackage(QString pkg)
 {
-    this->m_name = name;
+    this->m_package = pkg;
 
 }
 

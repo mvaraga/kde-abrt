@@ -9,7 +9,16 @@
 #include <KActionCollection>
 #include <KStandardAction>
 #include <KXmlGuiWindow>
+#include <KListWidget>
+#include <KListWidgetSearchLine>
+#include <KPushButton>
 #include <QGridLayout>
+#include <QSpacerItem>
+#include <QListWidgetItem>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QFont>
+
 #include "dbus.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,8 +39,9 @@ public:
     KPushButton* buttonReport;
     KListWidgetSearchLine* searchLine;
 
+    QLabel* labelTitle;
     QLabel* labelDescription;
-    QLabel* label1;
+    QLabel* labelText;
     QLabel* labelName;
     QLabel* labelVersion;
     QLabel* labelReported;
@@ -40,6 +50,7 @@ public:
     QLabel* labelVersionValue;
     QLabel* labelDetectedValue;
     QLabel* labelReportedValue;
+    QSpacerItem* spacerHorizontal;
 
     Dbus* dbus;
 
@@ -63,11 +74,15 @@ public:
         getAllProblemsAction->setIcon(KIcon("document-new")); //bad icon
         getProblemsAction->setCheckable(true);
         getAllProblemsAction->setCheckable(true);
-
         getProblemsAction->setObjectName("getProblemsAction");
         getAllProblemsAction->setObjectName("getAllProblemsAction");
-
         getProblemsAction->setChecked(true);
+
+//      getProblemsAction->setShortcut(Qt::CTRL + Qt::Key_W);
+//      connect(clearAction, SIGNAL(triggered(bool)),
+//           textArea, SLOT(clear()));
+//      KStandardAction::quit(kapp, SLOT(quit()),
+//                        MainWindow->actionCollection());
 
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName("centralWidget");
@@ -102,6 +117,9 @@ public:
 
         hLayout->addLayout(vLeftLayout);
 
+        spacerHorizontal = new QSpacerItem(80, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+        hLayout->addItem(spacerHorizontal);
+
         vRightLayout = new QVBoxLayout();
         vRightLayout->setObjectName("vRightLayout");
         hRightLayout = new QHBoxLayout();
@@ -117,10 +135,9 @@ public:
 
         vRightLayout->addLayout(hRightLayout);
 
-
-
         labelDescription = new QLabel("labelDescription", centralWidget);
-        label1 = new QLabel("label1", centralWidget);
+        labelTitle = new QLabel("labelTitle", centralWidget);
+        labelText = new QLabel("labelText", centralWidget);
         labelName = new QLabel("Name", centralWidget);
         labelVersion = new QLabel("Version", centralWidget);
         labelDetected = new QLabel("Detected", centralWidget);
@@ -129,13 +146,24 @@ public:
         labelVersionValue = new QLabel("labelVersionValue", centralWidget);
         labelDetectedValue = new QLabel("labelDetectedValue", centralWidget);
         labelReportedValue = new QLabel("labelReportedValue", centralWidget);
+        labelName->setAlignment(Qt::AlignRight);
+        labelVersion->setAlignment(Qt::AlignRight);
+        labelReported->setAlignment(Qt::AlignRight);
+        labelDetected->setAlignment(Qt::AlignRight);
+//set font
+        QFont font = labelTitle->font();
+        font.setPointSize(font.pointSize() * 1.2);
+        font.setBold(true);
+        labelTitle->setFont(font);
 
+        vRightLayout->addWidget(labelTitle);
         vRightLayout->addWidget(labelDescription);
-        vRightLayout->addWidget(label1);
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName("gridLayout");
+        gridLayout->setAlignment(Qt::AlignLeft);
 
+        labelVersionValue->setMinimumWidth(300);
         gridLayout->addWidget(labelName, 0, 0);
         gridLayout->addWidget(labelVersion, 1, 0);
         gridLayout->addWidget(labelDetected, 2, 0);
@@ -147,26 +175,11 @@ public:
 
         vRightLayout->addLayout(gridLayout);
 
-
-
-
-
+        vRightLayout->addWidget(labelText);
 
         hLayout->addLayout(vRightLayout);
 
         MainWindow->setCentralWidget(centralWidget);
-
-
-
-//      getProblemsAction->setShortcut(Qt::CTRL + Qt::Key_W);
-//      connect(clearAction, SIGNAL(triggered(bool)),
-//           textArea, SLOT(clear()));
-//      KStandardAction::quit(kapp, SLOT(quit()),
-//                        MainWindow->actionCollection());
-
-
-
-
 
         QMetaObject::connectSlotsByName(MainWindow);
         MainWindow->setupGUI(KXmlGuiWindow::StandardWindowOption::Default, "kde-abrtui.rc");

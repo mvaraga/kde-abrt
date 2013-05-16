@@ -7,12 +7,10 @@ class ProblemData
 {
 public:
     ProblemData();
-    ProblemData(QString name, QString desc);
-    ProblemData(QString name, QString executable, QString pkg_name, QString count, QString time); //bad
-    QString name() const;
-    void setName(QString);
-    QString desc() const;
-    void setDesc(QString);
+    QString package() const;
+    void setPackage(QString);
+    QString reported_to() const;
+    void setReported_to(QString);
     QString executable() const;
     void setExecutable(QString);
     QString time() const;
@@ -25,8 +23,8 @@ public:
     void setId(QString);
 
 private:
-    QString m_name;
-    QString m_desc;
+    QString m_package;
+    QString m_reported_to;
     QString m_executable;
     QString m_time;
     QString m_count;
