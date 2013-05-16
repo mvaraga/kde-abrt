@@ -29,7 +29,7 @@ Dbus::Dbus()
  * When @p allProblems is @c true, gets problems from all users.
  *
  * @param allProblems show problems from all users?
- * 
+ *
  * @return List of problems
  */
 QList<ProblemData*>* Dbus::getProblems(bool allProblems)
@@ -51,7 +51,7 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
         stats->append(statCount);
 
         QStringList stringList = reply.value();
-        QList<ProblemData*> *list = new QList<ProblemData*>();
+        QList<ProblemData*>* list = new QList<ProblemData*>();
         ProblemData* item;
 
         for (int i = 0; i < stringList.size(); ++i) {
@@ -70,7 +70,8 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
             }
         }
         delete(stats);
-	qSort(list->begin(), list->end(), comp);
+        //sort by date, new on top
+        qSort(list->begin(), list->end(), comp);
 
         return list;
 
@@ -83,9 +84,9 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 
 /**
  * This method deletes problems.
- * 
+ *
  * @param problems problems to delete
- * 
+ *
  */
 void Dbus::deleteProblem(QStringList* problems)
 {
@@ -96,6 +97,7 @@ void Dbus::deleteProblem(QStringList* problems)
     }
 }
 
-bool comp(ProblemData* left, ProblemData *right) {
-  return left->time() < right->time();
+bool comp(ProblemData* left, ProblemData* right)
+{
+    return left->time() > right->time();
 }

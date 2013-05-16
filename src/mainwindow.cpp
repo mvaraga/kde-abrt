@@ -30,9 +30,9 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     ui->label1->setText(item->data(Qt::UserRole + 1).toString()); //pkg_name
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
-    ui->label2->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
-    ui->label3->setText(item->data(Qt::UserRole + 3).toString()); //count
-    ui->label4->setText(item->data(Qt::UserRole + 4).toString()); //id
+    ui->labelName->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
+    ui->labelVersion->setText(item->data(Qt::UserRole + 3).toString()); //count
+    ui->labelReported->setText(item->data(Qt::UserRole + 4).toString()); //id
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
 }
 
@@ -108,14 +108,13 @@ void MainWindow::getAllProblems(bool allProblems)
         QWidget* myWidget = new QWidget();
         QGridLayout* gridLayout = new QGridLayout();
         gridLayout->addWidget(new QLabel(item->executable()), 0, 0);
-        gridLayout->addWidget(new QLabel(item->count()), 0, 1);
+        gridLayout->addWidget(new QLabel("topright"), 0, 1);
         gridLayout->addWidget(new QLabel("botleft"), 1, 0);
-        gridLayout->addWidget(new QLabel("botright"), 1, 1);
+        gridLayout->addWidget(new QLabel(item->count()), 1, 1);
         myWidget->setLayout(gridLayout);
         widgetItem->setSizeHint(QSize(0, 40));
         ui->listWidget->addItem(widgetItem);
         ui->listWidget->setItemWidget(widgetItem, myWidget);
-        ui->listWidget->setAlternatingRowColors(true);
         delete(item);
     }
     delete(list);
