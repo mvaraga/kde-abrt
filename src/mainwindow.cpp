@@ -79,8 +79,11 @@ void MainWindow::on_buttonReport_clicked()
         stringList.append("report-gui");
         stringList.append("--");
         stringList.append(list.first()->data(Qt::UserRole + 4).toString());
-
-        QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
+        QProcess* process = new QProcess();
+        process->start(LIBEXEC_DIR"/abrt-handle-event", stringList);
+        connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
+        qDebug("started reporting process");
+        //QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
     }
 }
 
@@ -174,7 +177,12 @@ QString MainWindow::parseReported_to(const QString& reported_to) const
                 result += str.section(": URL=", 1, 1) + "\n";
         }
         return result.join("");
-
     }
     return "yes";
+}
+
+void MainWindow::processFinished(int , QProcess::ExitStatus)
+{
+    getAllProblems(ui->allProblems);
+    qDebug("reporting process finished");
 }

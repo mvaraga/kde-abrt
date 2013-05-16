@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <KPushButton>
+#include <QProcess>
 #include "customsearchline.h"
 #include "problemdata.h"
 
@@ -40,6 +41,7 @@ private slots:
     void on_getProblemsAction_triggered(bool);
     void on_getAllProblemsAction_triggered(bool);
 
+    void processFinished(int, QProcess::ExitStatus);
     void crash(const QString&, const QString&, const QString&);
 };
 
