@@ -37,11 +37,7 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
     ui->labelDetectedValue->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
-    QString reported_to = item->data(Qt::UserRole + 5).toString();
-    if (reported_to.isEmpty()) {
-        reported_to = "no";
-    }
-    ui->labelReportedValue->setText(reported_to); //reported_to
+    ui->labelReportedValue->setText(parseReported_to(item->data(Qt::UserRole + 5).toString())); //reported_to
     ui->labelVersionValue->setText(item->data(Qt::UserRole + 6).toString()); //package
     ui->labelNameValue->setText(item->data(Qt::UserRole + 1).toString()); //name
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
@@ -130,28 +126,15 @@ void MainWindow::getAllProblems(bool allProblems)
         ui->listWidget->setItemWidget(widgetItem, myWidget);
         delete(item);
     }
+    if (ui->listWidget->count() > 0) {
+        ui->listWidget->item(0)->setSelected(true);
+    }
     delete(list);
 }
 
 void MainWindow::crash(const QString& , const QString& , const QString&)
 {
     getAllProblems(ui->allProblems);
-}
-
-void MainWindow::setupActions()
-{
-    KAction* getProblemsAction = new KAction(this);
-    getProblemsAction->setText(i18n("&Get all problems"));
-    getProblemsAction->setIcon(KIcon("document-new"));
-    getProblemsAction->setShortcut(Qt::CTRL + Qt::Key_W);
-    actionCollection()->addAction("getProblems", getProblemsAction);
-//   connect(clearAction, SIGNAL(triggered(bool)),
-//           textArea, SLOT(clear()));
-
-//   KStandardAction::quit(app, SLOT(quit()),
-//                         actionCollection());
-
-    setupGUI(Default, "kde-abrtui.rc");
 }
 
 void MainWindow::on_getProblemsAction_triggered(bool check)
@@ -176,4 +159,22 @@ void MainWindow::on_getAllProblemsAction_triggered(bool check)
     } else {
         ui->getAllProblemsAction->setChecked(true);
     }
+}
+
+QString MainWindow::parseReported_to(const QString& reported_to) const
+{
+    if (reported_to.isEmpty()) {
+        return "no";
+    }
+    if (reported_to.indexOf("URL=") != -1) {
+        QStringList list = reported_to.split("\n");
+        QStringList result;
+        foreach (const QString & str, list) {
+            if (str.indexOf(": URL=") != -1)
+                result += str.section(": URL=", 1, 1) + "\n";
+        }
+        return result.join("");
+
+    }
+    return "yes";
 }

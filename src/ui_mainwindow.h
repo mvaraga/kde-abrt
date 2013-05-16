@@ -16,6 +16,7 @@
 #include <QSpacerItem>
 #include <QListWidgetItem>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QFont>
 
@@ -51,6 +52,7 @@ public:
     QLabel* labelDetectedValue;
     QLabel* labelReportedValue;
     QSpacerItem* spacerHorizontal;
+    QSpacerItem* spacerVertical;
 
     Dbus* dbus;
 
@@ -93,7 +95,6 @@ public:
 
         listWidget = new KListWidget(MainWindow);
         listWidget->setObjectName("listWidget");
-        listWidget->setSelectionMode(KListWidget::ExtendedSelection);
         QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Expanding);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
@@ -104,6 +105,7 @@ public:
         listWidget->setAlternatingRowColors(true);
 
         searchLine = new CustomSearchLine(MainWindow, listWidget);
+        searchLine->setObjectName("searchLine");
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -150,6 +152,14 @@ public:
         labelVersion->setAlignment(Qt::AlignRight);
         labelReported->setAlignment(Qt::AlignRight);
         labelDetected->setAlignment(Qt::AlignRight);
+        labelTitle->setAlignment(Qt::AlignTop);
+        labelDescription->setAlignment(Qt::AlignTop);
+        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(labelDescription->sizePolicy().hasHeightForWidth());
+        labelDescription->setSizePolicy(sizePolicy2);
+
 //set font
         QFont font = labelTitle->font();
         font.setPointSize(font.pointSize() * 1.2);
@@ -157,11 +167,16 @@ public:
         labelTitle->setFont(font);
 
         vRightLayout->addWidget(labelTitle);
+        spacerVertical = new QSpacerItem(100, 100, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        //vRightLayout->addItem(spacerVertical);
         vRightLayout->addWidget(labelDescription);
+
+
+
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName("gridLayout");
-        gridLayout->setAlignment(Qt::AlignLeft);
+        gridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
         labelVersionValue->setMinimumWidth(300);
         gridLayout->addWidget(labelName, 0, 0);

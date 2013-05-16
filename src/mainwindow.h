@@ -31,7 +31,7 @@ private:
 
     void getProblems();
     void getAllProblems(bool allProblems = true);
-    void setupActions();
+    QString parseReported_to(const QString&) const;
 
 private slots:
     void on_buttonDelete_clicked();
