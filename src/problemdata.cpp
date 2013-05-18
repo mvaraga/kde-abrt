@@ -11,7 +11,7 @@ QString ProblemData::reported_to() const
 
 void ProblemData::setReported_to(QString reported_to)
 {
-    this->m_reported_to = reported_to;
+    m_reported_to = reported_to;
 }
 
 QString ProblemData::package() const
@@ -21,8 +21,7 @@ QString ProblemData::package() const
 
 void ProblemData::setPackage(QString pkg)
 {
-    this->m_package = pkg;
-
+    m_package = pkg;
 }
 
 QString ProblemData::count() const
@@ -32,7 +31,7 @@ QString ProblemData::count() const
 
 void ProblemData::setCount(QString count)
 {
-    this->m_count = count;
+    m_count = count;
 }
 
 QString ProblemData::executable() const
@@ -42,7 +41,7 @@ QString ProblemData::executable() const
 
 void ProblemData::setExecutable(QString executable)
 {
-    this->m_executable = executable;
+    m_executable = executable;
 }
 
 QString ProblemData::pkg_name() const
@@ -52,7 +51,7 @@ QString ProblemData::pkg_name() const
 
 void ProblemData::setPkg_name(QString pkg_name)
 {
-    this->m_pkg_name = pkg_name;
+    m_pkg_name = pkg_name;
 }
 
 QString ProblemData::time() const
@@ -62,7 +61,7 @@ QString ProblemData::time() const
 
 void ProblemData::setTime(QString time)
 {
-    this->m_time = time;
+    m_time = time;
 }
 
 QString ProblemData::id() const
@@ -72,5 +71,25 @@ QString ProblemData::id() const
 
 void ProblemData::setId(QString id)
 {
-    this->m_id = id;
+    m_id = id;
+}
+
+QString ProblemData::type() const
+{
+    return m_type;
+}
+
+void ProblemData::setType(QString type)
+{
+    m_type = type;
+}
+
+QString ProblemData::reason() const
+{
+    return m_reason;
+}
+
+void ProblemData::setReason(QString reason)
+{
+    m_reason = reason;
 }

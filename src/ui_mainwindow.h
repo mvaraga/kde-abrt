@@ -154,10 +154,10 @@ public:
         labelDetected->setAlignment(Qt::AlignRight);
         labelTitle->setAlignment(Qt::AlignTop);
         labelDescription->setAlignment(Qt::AlignTop);
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(labelDescription->sizePolicy().hasHeightForWidth());
+        //sizePolicy2.setHeightForWidth(labelDescription->sizePolicy().hasHeightForWidth());
         labelDescription->setSizePolicy(sizePolicy2);
 
 //set font

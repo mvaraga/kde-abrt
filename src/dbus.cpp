@@ -47,12 +47,16 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
         const QString statReported_to("reported_to");
         const QString statPkg_name("pkg_name");
         const QString statPackage("package");
+	const QString statType("type");
+	const QString statReason("reason");
         stats->append(statExecutable);
         stats->append(statTime);
         stats->append(statPkg_name);
         stats->append(statCount);
         stats->append(statReported_to);
         stats->append(statPackage);
+	stats->append(statType);
+	stats->append(statReason);
 
         QStringList stringList = reply.value();
         QList<ProblemData*>* list = new QList<ProblemData*>();
@@ -60,7 +64,6 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 
         for (int i = 0; i < stringList.size(); ++i) {
             QDBusReply<QMap<QString, QString> > replyInfo = m_dInterface->call("GetInfo", stringList.at(i), *stats);
-
             if (replyInfo.isValid()) {
                 item = new ProblemData();
                 item->setId(stringList.at(i));
@@ -70,6 +73,8 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
                 item->setTime(replyInfo.value().value(statTime));
                 item->setPackage(replyInfo.value().value(statPackage));
                 item->setReported_to(replyInfo.value().value(statReported_to));
+		item->setType(replyInfo.value().value(statType));
+		item->setReason(replyInfo.value().value(statReason));
                 list->append(item);
             } else {
                 qDebug("replyInfo failed: %s", qPrintable(replyInfo.error().message()));

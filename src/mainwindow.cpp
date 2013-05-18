@@ -40,6 +40,8 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     ui->labelReportedValue->setText(parseReported_to(item->data(Qt::UserRole + 5).toString())); //reported_to
     ui->labelVersionValue->setText(item->data(Qt::UserRole + 6).toString()); //package
     ui->labelNameValue->setText(item->data(Qt::UserRole + 1).toString()); //name
+    ui->labelDescription->setText(item->data(Qt::UserRole + 8).toString()); //reason
+    ui->labelDescription->setWordWrap(true);
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
 }
 
@@ -115,13 +117,15 @@ void MainWindow::getAllProblems(bool allProblems)
         widgetItem->setData(Qt::UserRole + 4, item->id());
         widgetItem->setData(Qt::UserRole + 5, item->reported_to());
         widgetItem->setData(Qt::UserRole + 6, item->package());
+	widgetItem->setData(Qt::UserRole + 7, item->type());
+	widgetItem->setData(Qt::UserRole + 8, item->reason());
 
         //listWidget->addItem(widgetItem);
         QWidget* myWidget = new QWidget();
         QGridLayout* gridLayout = new QGridLayout();
         gridLayout->addWidget(new QLabel(item->pkg_name()), 0, 0);
         gridLayout->addWidget(new QLabel("topright"), 0, 1);
-        gridLayout->addWidget(new QLabel("botleft"), 1, 0);
+        gridLayout->addWidget(new QLabel(item->type()), 1, 0);
         gridLayout->addWidget(new QLabel(item->count()), 1, 1);
         myWidget->setLayout(gridLayout);
         widgetItem->setSizeHint(QSize(0, 40));

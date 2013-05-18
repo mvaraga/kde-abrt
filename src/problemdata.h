@@ -21,6 +21,10 @@ public:
     void setCount(QString);
     QString id() const;
     void setId(QString);
+    QString type() const;
+    void setType(QString);
+    QString reason() const;
+    void setReason(QString);
 
 private:
     QString m_package;
@@ -30,6 +34,8 @@ private:
     QString m_count;
     QString m_pkg_name;
     QString m_id;
+    QString m_type;
+    QString m_reason;
 };
 
 #endif // PROBLEMDATA_H
