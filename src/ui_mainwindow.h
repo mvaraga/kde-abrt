@@ -88,6 +88,7 @@ public:
 
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName("centralWidget");
+        centralWidget->setMinimumSize(700, 400);
         hLayout = new QHBoxLayout(centralWidget);
         hLayout->setObjectName("hLayout");
         vLeftLayout = new QVBoxLayout();
@@ -119,7 +120,7 @@ public:
 
         hLayout->addLayout(vLeftLayout);
 
-        spacerHorizontal = new QSpacerItem(80, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+        spacerHorizontal = new QSpacerItem(50, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
         hLayout->addItem(spacerHorizontal);
 
         vRightLayout = new QVBoxLayout();
@@ -140,26 +141,42 @@ public:
         labelDescription = new QLabel("labelDescription", centralWidget);
         labelTitle = new QLabel("labelTitle", centralWidget);
         labelText = new QLabel("labelText", centralWidget);
-        labelName = new QLabel("Name", centralWidget);
-        labelVersion = new QLabel("Version", centralWidget);
-        labelDetected = new QLabel("Detected", centralWidget);
-        labelReported = new QLabel("Reported", centralWidget);
+        labelName = new QLabel("<font color='#87877e7e8080'>Name</font>", centralWidget);
+        labelVersion = new QLabel("<font color='#87877e7e8080'>Version</font>", centralWidget);
+        labelDetected = new QLabel("<font color='#87877e7e8080'>Detected</font>", centralWidget);
+        labelReported = new QLabel("<font color='#87877e7e8080'>Reported</font>", centralWidget);
         labelNameValue = new QLabel("labelNameValue", centralWidget);
         labelVersionValue = new QLabel("labelVersionValue", centralWidget);
         labelDetectedValue = new QLabel("labelDetectedValue", centralWidget);
         labelReportedValue = new QLabel("labelReportedValue", centralWidget);
-	labelReportedValue->setOpenExternalLinks(true);
+        labelReportedValue->setOpenExternalLinks(true);
         labelName->setAlignment(Qt::AlignRight);
+        labelName->setMargin(2);
+        labelName->setIndent(6);
         labelVersion->setAlignment(Qt::AlignRight);
+        labelVersion->setMargin(2);
+        labelVersion->setIndent(6);
         labelReported->setAlignment(Qt::AlignRight);
+        labelReported->setMargin(2);
+        labelReported->setFixedHeight(50);
+        labelReportedValue->setFixedHeight(50);
+        labelReportedValue->setAlignment(Qt::AlignLeft);
+        labelReported->setIndent(6);
         labelDetected->setAlignment(Qt::AlignRight);
+        labelDetected->setMargin(2);
+        labelDetected->setIndent(6);
         labelTitle->setAlignment(Qt::AlignTop);
-        labelDescription->setAlignment(Qt::AlignTop);
+        labelTitle->setIndent(30);
+
+        labelDescription->setAlignment(Qt::AlignBottom);
+        labelDescription->setIndent(30);
+        labelDescription->setWordWrap(true);
+        labelText->setWordWrap(true);
         QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        //sizePolicy2.setHeightForWidth(labelDescription->sizePolicy().hasHeightForWidth());
-        labelDescription->setSizePolicy(sizePolicy2);
+        sizePolicy2.setHeightForWidth(labelDescription->sizePolicy().hasHeightForWidth());
+        //labelDescription->setSizePolicy(sizePolicy2);
 
 //set font
         QFont font = labelTitle->font();
@@ -168,7 +185,7 @@ public:
         labelTitle->setFont(font);
 
         vRightLayout->addWidget(labelTitle);
-        spacerVertical = new QSpacerItem(100, 100, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        //spacerVertical = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
         //vRightLayout->addItem(spacerVertical);
         vRightLayout->addWidget(labelDescription);
 

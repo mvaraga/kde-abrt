@@ -36,12 +36,16 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     ui->labelTitle->setText(item->data(Qt::UserRole + 1).toString() + i18n(" crashed")); //name
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
-    ui->labelDetectedValue->setText(QDateTime::fromTime_t(timeInInt).toString()); //time
+    ui->labelDetectedValue->setText(QDateTime::fromTime_t(timeInInt).date().toString(Qt::DefaultLocaleShortDate)); //time
     ui->labelReportedValue->setText(parseReported_to(item->data(Qt::UserRole + 5).toString())); //reported_to
     ui->labelVersionValue->setText(item->data(Qt::UserRole + 6).toString()); //package
     ui->labelNameValue->setText(item->data(Qt::UserRole + 1).toString()); //name
     ui->labelDescription->setText(item->data(Qt::UserRole + 8).toString()); //reason
-    ui->labelDescription->setWordWrap(true);
+    if (item->data(Qt::UserRole + 5).toString().isEmpty()) {
+        ui->labelText->setText("This problem hasn't been reported to <i>Bugzilla</i> yet. "
+                               "Our developers may need more information to fix the problem.\n"
+                               "Please consider <b>reporting it</b> - you may help them. Thank you.");
+    }
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
 }
 
@@ -56,8 +60,13 @@ void MainWindow::on_buttonDelete_clicked()
         return;
     }
     if (list.size() == 1) {
-        item = list.at(0);
-        ui->dbus->deleteProblem(new QStringList(item->data(Qt::UserRole + 4).toString()));
+        QString problem = list.first()->data(Qt::UserRole + 4).toString();
+        item = list.first();
+        if (ui->allProblems == true) {
+            ui->dbus->chownProblem(problem);
+        }
+
+        ui->dbus->deleteProblem(new QStringList(problem));
     } else {
         foreach (item, list) {
             stringList->append(item->text());
@@ -77,15 +86,19 @@ void MainWindow::on_buttonReport_clicked()
     }
 
     if (list.size() == 1) {
+        QString problem = list.first()->data(Qt::UserRole + 4).toString();
         stringList.append("-e");
         stringList.append("report-gui");
         stringList.append("--");
-        stringList.append(list.first()->data(Qt::UserRole + 4).toString());
-        QProcess* process = new QProcess();
-        process->start(LIBEXEC_DIR"/abrt-handle-event", stringList);
-        connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
-        qDebug("started reporting process");
-        //QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
+        stringList.append(problem);
+        if (ui->allProblems == true) {
+            ui->dbus->chownProblem(problem);
+        }
+        /*   QProcess* process = new QProcess();
+           process->start(LIBEXEC_DIR"/abrt-handle-event", stringList);
+           connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
+           qDebug("started reporting process");
+        */   QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
     }
 }
 

@@ -22,10 +22,9 @@ public:
     Dbus();
     QList<ProblemData*>* getProblems(bool allProblems = false);
     void deleteProblem(QStringList* problems);
+    void chownProblem(const QString&);
 
 private:
-    QDBusInterface* createInterface();
-
     QString m_service;
     QString m_path;
     QString m_interface;
