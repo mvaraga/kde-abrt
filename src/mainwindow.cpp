@@ -33,18 +33,21 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
         (Qt::UserRole + 4, item->id());
         (Qt::UserRole + 5, item->reported_to());
         (Qt::UserRole + 6, item->package());*/
+    QString reported_to = parseReported_to(item->data(Qt::UserRole + 5).toString());
     ui->labelTitle->setText(item->data(Qt::UserRole + 1).toString() + i18n(" crashed")); //name
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
     ui->labelDetectedValue->setText(QDateTime::fromTime_t(timeInInt).date().toString(Qt::DefaultLocaleShortDate)); //time
-    ui->labelReportedValue->setText(parseReported_to(item->data(Qt::UserRole + 5).toString())); //reported_to
+    ui->labelReportedValue->setText(reported_to); //reported_to
     ui->labelVersionValue->setText(item->data(Qt::UserRole + 6).toString()); //package
     ui->labelNameValue->setText(item->data(Qt::UserRole + 1).toString()); //name
     ui->labelDescription->setText(item->data(Qt::UserRole + 8).toString()); //reason
-    if (item->data(Qt::UserRole + 5).toString().isEmpty()) {
+    if (reported_to.compare("no") == 0 || reported_to.compare("yes") == 0) {
         ui->labelText->setText("This problem hasn't been reported to <i>Bugzilla</i> yet. "
                                "Our developers may need more information to fix the problem.\n"
                                "Please consider <b>reporting it</b> - you may help them. Thank you.");
+    } else {
+        ui->labelText->clear();
     }
     qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
 }
@@ -136,12 +139,20 @@ void MainWindow::getAllProblems(bool allProblems)
         //listWidget->addItem(widgetItem);
         QWidget* myWidget = new QWidget();
         QGridLayout* gridLayout = new QGridLayout();
-        gridLayout->addWidget(new QLabel(item->pkg_name()), 0, 0);
-        gridLayout->addWidget(new QLabel("topright"), 0, 1);
-        gridLayout->addWidget(new QLabel(item->type()), 1, 0);
-        gridLayout->addWidget(new QLabel(item->count()), 1, 1);
+        QLabel* label;
+
+        gridLayout->addWidget(new QLabel(item->pkg_name(), ui->centralWidget), 0, 0);
+        label = new QLabel("topright", ui->centralWidget);
+        label->setAlignment(Qt::AlignRight);
+        label->setIndent(5);
+        gridLayout->addWidget(label, 0, 1);
+        gridLayout->addWidget(new QLabel(item->type(), ui->centralWidget), 1, 0);
+        label = new QLabel(item->count(), ui->centralWidget);
+        label->setAlignment(Qt::AlignRight);
+        label->setIndent(5);
+        gridLayout->addWidget(label, 1, 1);
         myWidget->setLayout(gridLayout);
-        widgetItem->setSizeHint(QSize(0, 40));
+        widgetItem->setSizeHint(QSize(0, 45));
         ui->listWidget->addItem(widgetItem);
         ui->listWidget->setItemWidget(widgetItem, myWidget);
         delete(item);
