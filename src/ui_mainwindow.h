@@ -148,6 +148,7 @@ public:
         labelVersionValue = new QLabel("labelVersionValue", centralWidget);
         labelDetectedValue = new QLabel("labelDetectedValue", centralWidget);
         labelReportedValue = new QLabel("labelReportedValue", centralWidget);
+	labelReportedValue->setOpenExternalLinks(true);
         labelName->setAlignment(Qt::AlignRight);
         labelVersion->setAlignment(Qt::AlignRight);
         labelReported->setAlignment(Qt::AlignRight);

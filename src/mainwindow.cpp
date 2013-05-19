@@ -117,8 +117,8 @@ void MainWindow::getAllProblems(bool allProblems)
         widgetItem->setData(Qt::UserRole + 4, item->id());
         widgetItem->setData(Qt::UserRole + 5, item->reported_to());
         widgetItem->setData(Qt::UserRole + 6, item->package());
-	widgetItem->setData(Qt::UserRole + 7, item->type());
-	widgetItem->setData(Qt::UserRole + 8, item->reason());
+        widgetItem->setData(Qt::UserRole + 7, item->type());
+        widgetItem->setData(Qt::UserRole + 8, item->reason());
 
         //listWidget->addItem(widgetItem);
         QWidget* myWidget = new QWidget();
@@ -170,17 +170,22 @@ void MainWindow::on_getAllProblemsAction_triggered(bool check)
 
 QString MainWindow::parseReported_to(const QString& reported_to) const
 {
+
     if (reported_to.isEmpty()) {
         return "no";
     }
     if (reported_to.indexOf("URL=") != -1) {
         QStringList list = reported_to.split("\n");
         QStringList result;
+        int index;
+        QString subStr = ": URL=";
         foreach (const QString & str, list) {
-            if (str.indexOf(": URL=") != -1)
-                result += str.section(": URL=", 1, 1) + "\n";
+            index = str.indexOf(subStr);
+            if (index != -1)
+                result += "<a href='" + str.mid(index + subStr.length()) + "' >" + str.left(index) + "</a>";
         }
-        return result.join("");
+        return result.join("\n<br />");
+
     }
     return "yes";
 }
