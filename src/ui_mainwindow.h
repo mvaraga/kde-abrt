@@ -52,24 +52,23 @@ public:
     QLabel* labelDetectedValue;
     QLabel* labelReportedValue;
     QSpacerItem* spacerHorizontal;
-    QSpacerItem* spacerVertical;
 
-    Dbus* dbus;
+    Dbus* m_dbus;
 
-    bool allProblems;
+    bool m_allProblems;
 
     KAction* getAllProblemsAction;
     KAction* getProblemsAction;
 
     void setupUi(KXmlGuiWindow* MainWindow) {
 
-        allProblems = false;
-        dbus = new Dbus();
+        m_allProblems = false;
+        m_dbus = new Dbus();
 
         getProblemsAction = new KAction(MainWindow);
         getAllProblemsAction = new KAction(MainWindow);
-        getProblemsAction->setText(i18n("&Get Problems"));
-        getAllProblemsAction->setText(i18n("Get &All Problems"));
+        getProblemsAction->setText(i18n("Get Problems"));
+        getAllProblemsAction->setText(i18n("Get All Problems"));
         MainWindow->actionCollection()->addAction("getProblems", getProblemsAction);
         MainWindow->actionCollection()->addAction("getAllProblems", getAllProblemsAction);
         getProblemsAction->setIcon(KIcon("document-new")); //bad icon
@@ -79,12 +78,6 @@ public:
         getProblemsAction->setObjectName("getProblemsAction");
         getAllProblemsAction->setObjectName("getAllProblemsAction");
         getProblemsAction->setChecked(true);
-
-//      getProblemsAction->setShortcut(Qt::CTRL + Qt::Key_W);
-//      connect(clearAction, SIGNAL(triggered(bool)),
-//           textArea, SLOT(clear()));
-//      KStandardAction::quit(kapp, SLOT(quit()),
-//                        MainWindow->actionCollection());
 
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName("centralWidget");
@@ -128,8 +121,8 @@ public:
         hRightLayout = new QHBoxLayout();
         hRightLayout->setObjectName("hRightLayout");
 
-        buttonDelete = new KPushButton(i18n("delete problem"), centralWidget);
-        buttonReport = new KPushButton(i18n("report problem"), centralWidget);
+        buttonDelete = new KPushButton(i18n("Delete"), centralWidget);
+        buttonReport = new KPushButton(i18n("Report"), centralWidget);
         buttonDelete->setObjectName("buttonDelete");
         buttonReport->setObjectName("buttonReport");
 
@@ -138,17 +131,17 @@ public:
 
         vRightLayout->addLayout(hRightLayout);
 
-        labelDescription = new QLabel("labelDescription", centralWidget);
-        labelTitle = new QLabel("labelTitle", centralWidget);
-        labelText = new QLabel("labelText", centralWidget);
-        labelName = new QLabel("<font color='#87877e7e8080'>Name</font>", centralWidget);
-        labelVersion = new QLabel("<font color='#87877e7e8080'>Version</font>", centralWidget);
-        labelDetected = new QLabel("<font color='#87877e7e8080'>Detected</font>", centralWidget);
-        labelReported = new QLabel("<font color='#87877e7e8080'>Reported</font>", centralWidget);
-        labelNameValue = new QLabel("labelNameValue", centralWidget);
-        labelVersionValue = new QLabel("labelVersionValue", centralWidget);
-        labelDetectedValue = new QLabel("labelDetectedValue", centralWidget);
-        labelReportedValue = new QLabel("labelReportedValue", centralWidget);
+        labelDescription = new QLabel(centralWidget);
+        labelTitle = new QLabel(centralWidget);
+        labelText = new QLabel(centralWidget);
+        labelName = new QLabel("<font color='#87877e7e8080'>" + i18n("Name") + "</font>", centralWidget);
+        labelVersion = new QLabel("<font color='#87877e7e8080'>" + i18n("Version") + "</font>", centralWidget);
+        labelDetected = new QLabel("<font color='#87877e7e8080'>" + i18n("Detected") + "</font>", centralWidget);
+        labelReported = new QLabel("<font color='#87877e7e8080'>" + i18n("Reported") + "</font>", centralWidget);
+        labelNameValue = new QLabel(centralWidget);
+        labelVersionValue = new QLabel(centralWidget);
+        labelDetectedValue = new QLabel(centralWidget);
+        labelReportedValue = new QLabel(centralWidget);
         labelReportedValue->setOpenExternalLinks(true);
         labelName->setAlignment(Qt::AlignRight);
         labelName->setMargin(2);
@@ -172,25 +165,15 @@ public:
         labelDescription->setIndent(30);
         labelDescription->setWordWrap(true);
         labelText->setWordWrap(true);
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(labelDescription->sizePolicy().hasHeightForWidth());
-        //labelDescription->setSizePolicy(sizePolicy2);
 
-//set font
+        //set font
         QFont font = labelTitle->font();
         font.setPointSize(font.pointSize() * 1.2);
         font.setBold(true);
         labelTitle->setFont(font);
 
         vRightLayout->addWidget(labelTitle);
-        //spacerVertical = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
-        //vRightLayout->addItem(spacerVertical);
         vRightLayout->addWidget(labelDescription);
-
-
-
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName("gridLayout");

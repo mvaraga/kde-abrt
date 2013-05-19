@@ -43,9 +43,9 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     ui->labelNameValue->setText(item->data(Qt::UserRole + 1).toString()); //name
     ui->labelDescription->setText(item->data(Qt::UserRole + 8).toString()); //reason
     if (reported_to.compare("no") == 0 || reported_to.compare("yes") == 0) {
-        ui->labelText->setText("This problem hasn't been reported to <i>Bugzilla</i> yet. "
-                               "Our developers may need more information to fix the problem.\n"
-                               "Please consider <b>reporting it</b> - you may help them. Thank you.");
+        ui->labelText->setText(i18n("This problem hasn't been reported to <i>Bugzilla</i> yet. "
+                                    "Our developers may need more information to fix the problem.\n"
+                                    "Please consider <b>reporting it</b> - you may help them. Thank you."));
     } else {
         ui->labelText->clear();
     }
@@ -65,18 +65,18 @@ void MainWindow::on_buttonDelete_clicked()
     if (list.size() == 1) {
         QString problem = list.first()->data(Qt::UserRole + 4).toString();
         item = list.first();
-        if (ui->allProblems == true) {
-            ui->dbus->chownProblem(problem);
+        if (ui->m_allProblems == true) {
+            ui->m_dbus->chownProblem(problem);
         }
 
-        ui->dbus->deleteProblem(new QStringList(problem));
+        ui->m_dbus->deleteProblem(new QStringList(problem));
     } else {
         foreach (item, list) {
             stringList->append(item->text());
-            ui->dbus->deleteProblem(stringList);
+            ui->m_dbus->deleteProblem(stringList);
         }
     }
-    getAllProblems(ui->allProblems);
+    getAllProblems(ui->m_allProblems);
 }
 
 void MainWindow::on_buttonReport_clicked()
@@ -94,14 +94,14 @@ void MainWindow::on_buttonReport_clicked()
         stringList.append("report-gui");
         stringList.append("--");
         stringList.append(problem);
-        if (ui->allProblems == true) {
-            ui->dbus->chownProblem(problem);
+        if (ui->m_allProblems == true) {
+            ui->m_dbus->chownProblem(problem);
         }
-        /*   QProcess* process = new QProcess();
-           process->start(LIBEXEC_DIR"/abrt-handle-event", stringList);
-           connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
-           qDebug("started reporting process");
-        */   QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
+        QProcess* process = new QProcess();
+        process->start(LIBEXEC_DIR"/abrt-handle-event", stringList);
+        connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
+        qDebug("started reporting process");
+        //QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
     }
 }
 
@@ -112,8 +112,8 @@ void MainWindow::getProblems()
 //
 void MainWindow::getAllProblems(bool allProblems)
 {
-    ui->allProblems = allProblems;
-    QList<ProblemData*>* list = ui->dbus->getProblems(ui->allProblems);
+    ui->m_allProblems = allProblems;
+    QList<ProblemData*>* list = ui->m_dbus->getProblems(ui->m_allProblems);
 
     if (list->empty()) {
         qDebug("empty list");
@@ -164,7 +164,7 @@ void MainWindow::getAllProblems(bool allProblems)
 
 void MainWindow::crash(const QString& , const QString& , const QString&)
 {
-    getAllProblems(ui->allProblems);
+    getAllProblems(ui->m_allProblems);
 }
 
 void MainWindow::on_getProblemsAction_triggered(bool check)
@@ -195,7 +195,7 @@ QString MainWindow::parseReported_to(const QString& reported_to) const
 {
 
     if (reported_to.isEmpty()) {
-        return "no";
+        return i18n("no");
     }
     if (reported_to.indexOf("URL=") != -1) {
         QStringList list = reported_to.split("\n");
@@ -210,12 +210,12 @@ QString MainWindow::parseReported_to(const QString& reported_to) const
         return result.join("\n<br />");
 
     }
-    return "yes";
+    return i18n("yes");
 }
 
 void MainWindow::processFinished(int , QProcess::ExitStatus)
 {
-    getAllProblems(ui->allProblems);
+    getAllProblems(ui->m_allProblems);
     qDebug("reporting process finished");
 }
 
