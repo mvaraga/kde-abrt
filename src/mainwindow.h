@@ -33,6 +33,7 @@ private:
     void getProblems();
     void getAllProblems(bool allProblems = true);
     QString parseReported_to(const QString&) const;
+    QString getFancyDate(QDateTime);
 
 private slots:
     void on_buttonDelete_clicked();

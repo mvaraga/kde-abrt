@@ -136,13 +136,12 @@ void MainWindow::getAllProblems(bool allProblems)
         widgetItem->setData(Qt::UserRole + 7, item->type());
         widgetItem->setData(Qt::UserRole + 8, item->reason());
 
-        //listWidget->addItem(widgetItem);
         QWidget* myWidget = new QWidget();
         QGridLayout* gridLayout = new QGridLayout();
         QLabel* label;
 
         gridLayout->addWidget(new QLabel(item->pkg_name(), ui->centralWidget), 0, 0);
-        label = new QLabel("topright", ui->centralWidget);
+        label = new QLabel(getFancyDate(QDateTime::fromTime_t(item->time().toUInt())), ui->centralWidget);
         label->setAlignment(Qt::AlignRight);
         label->setIndent(5);
         gridLayout->addWidget(label, 0, 1);
@@ -218,4 +217,32 @@ void MainWindow::processFinished(int , QProcess::ExitStatus)
 {
     getAllProblems(ui->allProblems);
     qDebug("reporting process finished");
+}
+
+QString MainWindow::getFancyDate(QDateTime value)
+{
+    QDateTime base = QDateTime::currentDateTime();
+    QDate baseDate = base.date();
+    QDate valueDate = value.date();
+    QString name;
+    int offset;
+    if (base < value)
+        return i18n("Future"); //never should happen
+    int days = valueDate.daysTo(baseDate);
+    if (days == 0)
+        return value.time().toString();
+    else if (days == 1)
+        return i18n("Yesterday");
+    if (days < baseDate.dayOfWeek())
+        return QDate::longDayName(valueDate.dayOfWeek());
+    if (valueDate.month() == baseDate.month() && valueDate.year() == baseDate.year()) {
+        offset = qRound((days - baseDate.dayOfWeek()) / 7) + 1;
+        return i18np("Last week", "%1 weeks ago", offset);
+    } else if (valueDate.year() == baseDate.year()) {
+        offset = baseDate.month() - valueDate.month();
+        return i18np("Last month", "%1 months ago", offset);
+    } else {
+        offset = baseDate.year() - valueDate.year();
+        return i18np("Last year", "%1 years ago", offset);
+    }
 }
