@@ -7,4 +7,4 @@ Terminal=false
 Type=Application
 Categories=System;
 StartupNotify=true
-X-Desktop-File-Install-Version=0.21
+X-Desktop-File-Install-Version=1.0
