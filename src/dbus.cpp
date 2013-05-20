@@ -1,27 +1,41 @@
-#include <stdio.h>
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QtDBus>
 #include <QListWidget>
 #include <QtAlgorithms>
+#include <KDebug>
 #include "dbus.h"
 #include "problemdata.h"
 
 /**
+ * class DbusPrivate
+ */
+class Dbus::DbusPrivate
+{
+public:
+    DbusPrivate(): m_dInterface(new QDBusInterface("org.freedesktop.problems",
+                                    "/org/freedesktop/problems",
+                                    "org.freedesktop.problems",
+                                    QDBusConnection::systemBus()))
+    {}
+
+    QDBusInterface* m_dInterface;
+};
+
+
+/**
  * This constructor create connection to dbus.
  */
-Dbus::Dbus()
+Dbus::Dbus(): d(new DbusPrivate())
 {
-    qDBusRegisterMetaType<QMap<QString, QString> >(); //allow QDBusReply<QMap<QString,QString> >
-
-    m_service = "org.freedesktop.problems";
-    m_path = "/org/freedesktop/problems";
-    m_interface = "org.freedesktop.problems";
-
-    m_connection = new QDBusConnection(QDBusConnection::systemBus());
-    m_dInterface = new QDBusInterface(m_service,
-                                      m_path,
-                                      m_interface,
-                                      *m_connection);
+    //allow QDBusReply<QMap<QString,QString> >
+    qDBusRegisterMetaType<QMap<QString, QString> >();
+}
+/**
+ * Destructor deleting d-pointer
+ */
+Dbus::~Dbus()
+{
+    delete(d);
 }
 
 /**
@@ -35,7 +49,7 @@ Dbus::Dbus()
 QList<ProblemData*>* Dbus::getProblems(bool allProblems)
 {
     //get reply from dbus
-    QDBusReply<QStringList> reply = m_dInterface->call(allProblems ? "GetAllProblems" : "GetProblems");
+    QDBusReply<QStringList> reply = d->m_dInterface->call(allProblems ? "GetAllProblems" : "GetProblems");
 
     if (reply.isValid()) {
 
@@ -63,8 +77,10 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
         ProblemData* item;
 
         for (int i = 0; i < stringList.size(); ++i) {
-            QDBusReply<QMap<QString, QString> > replyInfo = m_dInterface->call("GetInfo", stringList.at(i), *stats);
+            //calling method GetInfo via dbus
+            QDBusReply<QMap<QString, QString> > replyInfo = d->m_dInterface->call("GetInfo", stringList.at(i), *stats);
             if (replyInfo.isValid()) {
+	      //set all attributes
                 item = new ProblemData();
                 item->setId(stringList.at(i));
                 item->setExecutable(replyInfo.value().value(statExecutable));
@@ -76,21 +92,23 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
                 item->setType(replyInfo.value().value(statType));
                 item->setReason(replyInfo.value().value(statReason));
                 list->append(item);
+
+                //sort by date, new on top
+                //lambda abstraction, c++11
+                qSort(list->begin(), list->end(),
+                [](ProblemData * left, ProblemData *  right) {
+                    return left->time() > right->time();
+                });
             } else {
-                qDebug("replyInfo failed: %s", qPrintable(replyInfo.error().message()));
+                kDebug() << qPrintable("replyInfo failed: " + replyInfo.error().message());
             }
         }
         delete(stats);
-        //sort by date, new on top
-        qSort(list->begin(), list->end(), comp);
-
         return list;
-
     } else {
-        qDebug("Call failed: %s\n", qPrintable(reply.error().message()));
+        kError() << "Call failed: " << qPrintable(reply.error().message());
         return NULL;
     }
-
 }
 
 /**
@@ -101,25 +119,28 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
  */
 void Dbus::deleteProblem(QStringList* problems)
 {
-    QDBusReply<void> reply = m_dInterface->call("DeleteProblem", *problems);
+    QDBusReply<void> reply = d->m_dInterface->call("DeleteProblem", *problems);
     if (reply.isValid()) return;
     else {
-        qDebug("Call failed: %s\n", qPrintable(reply.error().message()));
+        kError() << "Call failed: " << qPrintable(reply.error().message());
     }
 }
 
-void Dbus::chownProblem(const QString& problem)
+/**
+ * This method change ownership of problem to current user.
+ * 
+ * @param problem problem to change ownership
+ * 
+ * @return returns @c true if it is OK, @c false if method failed
+ */
+bool Dbus::chownProblem(const QString& problem)
 {
-    QDBusReply<void> reply = m_dInterface->call("ChownProblemDir", problem);
-    if (reply.isValid()) return;
+    QDBusReply<void> reply = d->m_dInterface->call("ChownProblemDir", problem);
+    if (reply.isValid())
+      return true;
     else {
-        qDebug("Call failed: %s\n", qPrintable(reply.error().message()));
+        kError() << "Call failed: " << qPrintable(reply.error().message());
+	return false;
     }
 
-}
-
-
-bool comp(ProblemData* left, ProblemData* right)
-{
-    return left->time() > right->time();
 }

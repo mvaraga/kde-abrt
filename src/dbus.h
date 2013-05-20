@@ -1,13 +1,9 @@
 #ifndef DBUS_H
 #define DBUS_H
 
-#include <stdio.h>
-#include <QtCore/QCoreApplication>
 #include <QtDBus/QtDBus>
 
 class ProblemData;
-
-bool comp(ProblemData*, ProblemData*);
 
 typedef QMap <QString, QString> MetaMap;
 Q_DECLARE_METATYPE(MetaMap)
@@ -19,17 +15,15 @@ Q_DECLARE_METATYPE(MetaMap)
 class Dbus
 {
 public:
-    Dbus();
+    explicit Dbus();
+    virtual ~Dbus();
     QList<ProblemData*>* getProblems(bool allProblems = false);
     void deleteProblem(QStringList* problems);
-    void chownProblem(const QString&);
+    bool chownProblem(const QString&);
 
 private:
-    QString m_service;
-    QString m_path;
-    QString m_interface;
-    QDBusConnection* m_connection;
-    QDBusInterface* m_dInterface;
+    class DbusPrivate;
+    DbusPrivate* const d;
 };
 
 #endif
