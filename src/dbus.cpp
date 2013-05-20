@@ -80,7 +80,7 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
             //calling method GetInfo via dbus
             QDBusReply<QMap<QString, QString> > replyInfo = d->m_dInterface->call("GetInfo", stringList.at(i), *stats);
             if (replyInfo.isValid()) {
-	      //set all attributes
+                //set all attributes
                 item = new ProblemData();
                 item->setId(stringList.at(i));
                 item->setExecutable(replyInfo.value().value(statExecutable));
@@ -121,28 +121,28 @@ bool Dbus::deleteProblem(QStringList* problems)
 {
     QDBusReply<void> reply = d->m_dInterface->call("DeleteProblem", *problems);
     if (reply.isValid())
-      return true;
+        return true;
     else {
         kError() << "Call failed: " << qPrintable(reply.error().message());
-	return false;
+        return false;
     }
 }
 
 /**
  * This method change ownership of problem to current user.
- * 
+ *
  * @param problem problem to change ownership
- * 
+ *
  * @return returns @c true if it is OK, @c false if method failed
  */
 bool Dbus::chownProblem(const QString& problem)
 {
     QDBusReply<void> reply = d->m_dInterface->call("ChownProblemDir", problem);
     if (reply.isValid())
-      return true;
+        return true;
     else {
         kError() << "Call failed: " << qPrintable(reply.error().message());
-	return false;
+        return false;
     }
 
 }

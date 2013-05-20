@@ -53,7 +53,7 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     } else {
         ui->labelText->clear();
     }
-    kDebug()<< qPrintable(item->data(Qt::UserRole + 4).toString());
+    kDebug() << qPrintable(item->data(Qt::UserRole + 4).toString());
 
 }
 
@@ -112,7 +112,7 @@ void MainWindow::on_buttonReport_clicked()
         kDebug() << "started reporting process";
         //QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
     } else {
-      kWarning() << "not possible delete more then one";
+        kWarning() << "not possible delete more then one";
     }
 }
 
@@ -226,10 +226,10 @@ QString MainWindow::parseReported_to(const QString& reported_to) const
 
 void MainWindow::processFinished(int ret, QProcess::ExitStatus)
 {
-  if(ret!=0){
-    QErrorMessage* message = new QErrorMessage(this);
-    message->showMessage(i18n("error: extern program abrt-handle-event fail"));
-  }
+    if (ret != 0) {
+        QErrorMessage* message = new QErrorMessage(this);
+        message->showMessage(i18n("error: extern program abrt-handle-event fail"));
+    }
 
     getAllProblems(ui->m_allProblems);
     kDebug() << "reporting process finished";
@@ -240,7 +240,7 @@ void MainWindow::processFinished(int ret, QProcess::ExitStatus)
  * This method return date in fancy format
  * normal date: 15/05/2013 -> "Last month"or "2 months ago"
  * @param value date to transform
- * 
+ *
  * @return fancy date in @c QString
  */
 QString MainWindow::getFancyDate(QDateTime value)

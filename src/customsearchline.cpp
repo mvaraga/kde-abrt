@@ -23,6 +23,9 @@ bool CustomSearchLine::itemMatches(const QListWidgetItem* item, const QString& s
     if (item == 0)
         return false;
 
-    return (item->data(Qt::UserRole).toString().indexOf(s, 0,
-            caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0);
+    return (item->data(Qt::UserRole).toString().indexOf(s, 0, caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0) ||
+           (item->data(Qt::UserRole + 1).toString().indexOf(s, 0, caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0) ||
+           (item->data(Qt::UserRole + 6).toString().indexOf(s, 0, caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0) ||
+           (item->data(Qt::UserRole + 7).toString().indexOf(s, 0, caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0) ||
+           (item->data(Qt::UserRole + 8).toString().indexOf(s, 0, caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0);
 }
