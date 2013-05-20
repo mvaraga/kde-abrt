@@ -11,7 +11,7 @@ CustomSearchLine::CustomSearchLine(QWidget* parent, QListWidget* listWidget): KL
  *
  * @param item tested QListWidgetItem
  * @param s string from search line
- * 
+ *
  * @return true if item match string
  */
 bool CustomSearchLine::itemMatches(const QListWidgetItem* item, const QString& s) const
@@ -24,5 +24,5 @@ bool CustomSearchLine::itemMatches(const QListWidgetItem* item, const QString& s
         return false;
 
     return (item->data(Qt::UserRole).toString().indexOf(s, 0,
-                                 caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0);
+            caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0);
 }

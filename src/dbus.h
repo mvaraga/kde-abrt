@@ -18,7 +18,7 @@ public:
     explicit Dbus();
     virtual ~Dbus();
     QList<ProblemData*>* getProblems(bool allProblems = false);
-    void deleteProblem(QStringList* problems);
+    bool deleteProblem(QStringList* problems);
     bool chownProblem(const QString&);
 
 private:

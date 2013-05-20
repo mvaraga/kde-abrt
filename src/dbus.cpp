@@ -117,12 +117,14 @@ QList<ProblemData*>* Dbus::getProblems(bool allProblems)
  * @param problems problems to delete
  *
  */
-void Dbus::deleteProblem(QStringList* problems)
+bool Dbus::deleteProblem(QStringList* problems)
 {
     QDBusReply<void> reply = d->m_dInterface->call("DeleteProblem", *problems);
-    if (reply.isValid()) return;
+    if (reply.isValid())
+      return true;
     else {
         kError() << "Call failed: " << qPrintable(reply.error().message());
+	return false;
     }
 }
 

@@ -5,6 +5,7 @@
 #include <KLocale>
 #include <KActionCollection>
 #include <KStandardAction>
+#include <QErrorMessage>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dbus.h"
@@ -22,6 +23,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// fill labels on right side of window
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWidgetItem*)
 {
     if (item == NULL) return;
@@ -35,9 +37,11 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
         (Qt::UserRole + 6, item->package());*/
     QString reported_to = parseReported_to(item->data(Qt::UserRole + 5).toString());
     ui->labelTitle->setText(item->data(Qt::UserRole + 1).toString() + i18n(" crashed")); //name
+    //conversion to integer and to date
     QString timeInString = item->data(Qt::UserRole + 2).toString();
     uint timeInInt = timeInString.toUInt();
     ui->labelDetectedValue->setText(QDateTime::fromTime_t(timeInInt).date().toString(Qt::DefaultLocaleShortDate)); //time
+
     ui->labelReportedValue->setText(reported_to); //reported_to
     ui->labelVersionValue->setText(item->data(Qt::UserRole + 6).toString()); //package
     ui->labelNameValue->setText(item->data(Qt::UserRole + 1).toString()); //name
@@ -49,33 +53,38 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem* item, QListWi
     } else {
         ui->labelText->clear();
     }
-    qDebug(qPrintable(item->data(Qt::UserRole + 4).toString()));
+    kDebug()<< qPrintable(item->data(Qt::UserRole + 4).toString());
+
 }
 
 void MainWindow::on_buttonDelete_clicked()
 {
     QList<QListWidgetItem*> list = ui->listWidget->selectedItems();
+
+    if (list.isEmpty()) {
+        kWarning() << "warning: no item(s) selected";
+        return;
+    }
+
     QListWidgetItem* item;
     QStringList* stringList = new QStringList();
 
-    if (list.isEmpty()) {
-        qDebug("warning: no item(s) selected");
-        return;
-    }
+    //when just one item is selected
     if (list.size() == 1) {
         QString problem = list.first()->data(Qt::UserRole + 4).toString();
         item = list.first();
         if (ui->m_allProblems == true) {
             ui->m_dbus->chownProblem(problem);
         }
-
         ui->m_dbus->deleteProblem(new QStringList(problem));
     } else {
+        //allow delete more then one item at one click
         foreach (item, list) {
             stringList->append(item->text());
             ui->m_dbus->deleteProblem(stringList);
         }
     }
+    //refresh
     getAllProblems(ui->m_allProblems);
 }
 
@@ -84,7 +93,7 @@ void MainWindow::on_buttonReport_clicked()
     QList<QListWidgetItem*> list = ui->listWidget->selectedItems();
     QStringList stringList;
     if (list.isEmpty()) {
-        qDebug("warning: no item(s) selected");
+        kWarning() << "warning: no item(s) selected";
         return;
     }
 
@@ -100,8 +109,10 @@ void MainWindow::on_buttonReport_clicked()
         QProcess* process = new QProcess();
         process->start(LIBEXEC_DIR"/abrt-handle-event", stringList);
         connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
-        qDebug("started reporting process");
+        kDebug() << "started reporting process";
         //QProcess::startDetached(LIBEXEC_DIR"/abrt-handle-event", stringList);
+    } else {
+      kWarning() << "not possible delete more then one";
     }
 }
 
@@ -116,7 +127,7 @@ void MainWindow::getAllProblems(bool allProblems)
     QList<ProblemData*>* list = ui->m_dbus->getProblems(ui->m_allProblems);
 
     if (list->empty()) {
-        qDebug("empty list");
+        kWarning() << "empty list";
     }
 
     ui->listWidget->clear();                                      //remove duplicates
@@ -213,12 +224,25 @@ QString MainWindow::parseReported_to(const QString& reported_to) const
     return i18n("yes");
 }
 
-void MainWindow::processFinished(int , QProcess::ExitStatus)
+void MainWindow::processFinished(int ret, QProcess::ExitStatus)
 {
+  if(ret!=0){
+    QErrorMessage* message = new QErrorMessage(this);
+    message->showMessage(i18n("error: extern program abrt-handle-event fail"));
+  }
+
     getAllProblems(ui->m_allProblems);
-    qDebug("reporting process finished");
+    kDebug() << "reporting process finished";
 }
 
+
+/**
+ * This method return date in fancy format
+ * normal date: 15/05/2013 -> "Last month"or "2 months ago"
+ * @param value date to transform
+ * 
+ * @return fancy date in @c QString
+ */
 QString MainWindow::getFancyDate(QDateTime value)
 {
     QDateTime base = QDateTime::currentDateTime();
